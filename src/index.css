@@ -1,0 +1,493 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* MARS design system — premium, minimal, futuristic.
+   All colors MUST be HSL. */
+
+@layer base {
+  :root {
+    --background: 40 33% 98%;
+    --foreground: 0 0% 18%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 18%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 18%;
+
+    --primary: 0 0% 18%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 210 20% 96%;
+    --secondary-foreground: 0 0% 18%;
+
+    --muted: 210 20% 96%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 210 20% 96%;
+    --accent-foreground: 0 0% 18%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 0 0% 89%;
+    --input: 0 0% 89%;
+    --ring: 0 0% 18%;
+
+    --radius: 0.75rem;
+
+    /* MARS nav tokens */
+    --nav-ink: 0 0% 96%;                 /* white on dark hero */
+    --nav-ink-scrolled: 0 0% 96%;        /* near-white once scrolled */
+    --nav-glass: 0 0% 0%;                /* dark glass base */
+    --nav-glass-alpha: 0.42;
+    --nav-border: 0 0% 100%;
+    --nav-border-alpha: 0.08;
+    --nav-glow: 0 0% 100%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 0 0% 6%;
+    --foreground: 0 0% 96%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 96%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 96%;
+    --primary: 0 0% 96%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 96%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 96%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 96%;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 0 0% 80%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: "Urbanist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  html.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  html.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  html.lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "cv11";
+    overflow-x: hidden;
+    width: 100%;
+  }
+}
+
+/* MARS — premium nav micro-interactions */
+@layer components {
+  .mars-nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 0.1875rem;
+    font-family: "Urbanist", sans-serif;
+    font-weight: 500;
+    font-size: 0.703125rem;
+    letter-spacing: 0.005em;
+    color: hsl(var(--nav-ink));
+    transition:
+      color 0.3s ease,
+      letter-spacing 0.3s ease,
+      transform 0.25s ease,
+      text-shadow 0.3s ease;
+    will-change: transform, letter-spacing;
+  }
+
+  .mars-nav-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0.1875rem;
+    height: 1px;
+    width: 0;
+    background: currentColor;
+    opacity: 0.7;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+  }
+
+  .mars-nav-link:hover {
+    transform: scale(1.03);
+    letter-spacing: 0.04em;
+    color: hsl(var(--nav-ink));
+    text-shadow: 0 0 12px hsl(var(--nav-glow) / 0.0);
+  }
+
+  .mars-nav-link:hover::after {
+    width: 70%;
+  }
+
+  /* Scrolled state — text shifts to luminous near-white with soft glow on hover */
+  .mars-nav--scrolled .mars-nav-link {
+    color: hsl(var(--nav-ink-scrolled));
+  }
+
+  .mars-nav--scrolled .mars-nav-link:hover {
+    color: hsl(0 0% 100%);
+    text-shadow:
+      0 0 10px hsl(var(--nav-glow) / 0.55),
+      0 0 24px hsl(var(--nav-glow) / 0.25);
+  }
+
+  .mars-logo-mark {
+    display: inline-flex;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    will-change: transform, filter;
+  }
+  .mars-logo-mark img {
+    /* logo is white — keep as-is on dark hero and dark glass */
+    filter: none;
+    transition: filter 0.4s ease, opacity 0.3s ease;
+  }
+  .mars-logo-mark:hover {
+    transform: scale(1.05);
+  }
+  .mars-logo-mark:hover img {
+    filter: drop-shadow(0 0 10px hsl(var(--nav-glow) / 0.55))
+      drop-shadow(0 0 24px hsl(var(--nav-glow) / 0.25));
+  }
+  .mars-logo-text {
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+  }
+  .mars-logo-mark:hover .mars-logo-text {
+    color: hsl(0 0% 100%);
+    text-shadow:
+      0 0 10px hsl(var(--nav-glow) / 0.55),
+      0 0 20px hsl(var(--nav-glow) / 0.25);
+  }
+
+  .mars-nav-shell {
+    background-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-color: transparent;
+    box-shadow: none;
+    transition:
+      background-color 0.4s ease-in-out,
+      backdrop-filter 0.4s ease-in-out,
+      -webkit-backdrop-filter 0.4s ease-in-out,
+      border-color 0.4s ease-in-out,
+      box-shadow 0.4s ease-in-out,
+      padding 0.4s ease-in-out;
+  }
+
+  .mars-nav--scrolled .mars-nav-shell {
+    background-color: hsla(0, 0%, 0%, 0.48);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-color: hsla(0, 0%, 100%, 0.1);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.09) inset,
+      0 12px 40px -15px rgba(0, 0, 0, 0.7),
+      0 0 15px rgba(255, 255, 255, 0.02);
+  }
+
+  /* MARS — premium glass footer */
+  .mars-footer-glass {
+    position: relative;
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.045), hsl(0 0% 100% / 0.02)),
+      linear-gradient(180deg, hsl(0 0% 8%), hsl(0 0% 5%));
+    border: 1px solid hsl(0 0% 100% / 0.08);
+    -webkit-backdrop-filter: saturate(160%) blur(20px);
+    backdrop-filter: saturate(160%) blur(20px);
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.06) inset,
+      0 0 0 1px hsl(0 0% 100% / 0.02) inset,
+      0 40px 120px -40px hsl(0 0% 0% / 0.7),
+      0 0 80px -20px hsl(0 0% 100% / 0.05);
+  }
+
+  .mars-footer-heading {
+    font-family: "Urbanist", sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: hsl(0 0% 100% / 0.92);
+  }
+
+  .mars-footer-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.9375rem;
+    color: hsl(0 0% 70%);
+    transition: color 0.25s ease, text-shadow 0.3s ease, transform 0.25s ease;
+  }
+  .mars-footer-link:hover {
+    color: hsl(0 0% 100%);
+    text-shadow:
+      0 0 10px hsl(0 0% 100% / 0.45),
+      0 0 24px hsl(0 0% 100% / 0.18);
+  }
+
+  .mars-footer-cta {
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      background-color 0.3s ease;
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.6) inset,
+      0 8px 30px -10px hsl(0 0% 100% / 0.25);
+  }
+  .mars-footer-cta:hover {
+    transform: scale(1.03);
+    box-shadow:
+      0 1px 0 hsl(0 0% 100% / 0.8) inset,
+      0 10px 40px -8px hsl(0 0% 100% / 0.45),
+      0 0 30px hsl(0 0% 100% / 0.25);
+  }
+
+  .mars-footer-social {
+    color: hsl(0 0% 75%);
+    border: 1px solid hsl(0 0% 100% / 0.10);
+    background: hsl(0 0% 100% / 0.02);
+    transition:
+      transform 0.25s ease,
+      color 0.25s ease,
+      border-color 0.25s ease,
+      box-shadow 0.3s ease,
+      background-color 0.25s ease;
+  }
+  .mars-footer-social:hover {
+    color: hsl(0 0% 100%);
+    transform: scale(1.06);
+    border-color: hsl(0 0% 100% / 0.25);
+    background: hsl(0 0% 100% / 0.05);
+    box-shadow:
+      0 0 18px hsl(0 0% 100% / 0.25),
+      0 0 0 1px hsl(0 0% 100% / 0.08) inset;
+  }
+
+  /* MARS — futuristic glassmorphic utility classes */
+  .mars-glass-card {
+    background: linear-gradient(135deg, hsl(0 0% 100% / 0.04), hsl(0 0% 100% / 0.01));
+    border: 1px solid hsl(0 0% 100% / 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 
+      0 1px 0 hsl(0 0% 100% / 0.06) inset,
+      0 8px 32px -8px hsl(0 0% 0% / 0.4);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .mars-glass-card:hover {
+    background: linear-gradient(135deg, hsl(0 0% 100% / 0.07), hsl(0 0% 100% / 0.02));
+    border-color: hsl(0 0% 100% / 0.12);
+    box-shadow: 
+      0 1px 0 hsl(0 0% 100% / 0.08) inset,
+      0 12px 40px -6px hsl(0 0% 0% / 0.5),
+      0 0 20px hsl(0 0% 100% / 0.03);
+  }
+
+  .mars-text-gradient {
+    background: linear-gradient(135deg, hsl(0 0% 100%) 30%, hsl(0 0% 65%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .mars-text-gradient * {
+    background: inherit;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* MARS — luxury metallic text with radiant light sweep */
+  .metallic-text-sweep {
+    background: linear-gradient(
+      120deg,
+      #2b2b2b 20%,
+      #5c5c5c 35%,
+      #c9d3e0 45%,
+      #ffffff 50%,
+      #c9d3e0 55%,
+      #5c5c5c 65%,
+      #2b2b2b 80%
+    );
+    background-size: 300% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: metalSweep 5.5s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+    display: inline-block;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.15));
+  }
+
+  @keyframes metalSweep {
+    0% {
+      background-position: 150% 0;
+    }
+    100% {
+      background-position: -150% 0;
+    }
+  }
+
+
+}
+
+/* Custom mobile rendering performance overrides */
+@media (max-width: 767px) {
+  /* Disable all backdrop-filters globally on mobile to eliminate GPU scroll lag */
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Substitute glassmorphic elements with high-performance 95% dark solid-ish backdrops */
+  .backdrop-blur,
+  .backdrop-blur-sm,
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  .mars-glass-card,
+  .mars-nav-shell,
+  .mars-footer-glass {
+    background-color: rgba(10, 10, 10, 0.95) !important;
+  }
+}
+
+/* CRT scanline utility and diagonal holographic sweeping animation */
+.crt-scanline {
+  position: relative;
+  overflow: hidden;
+}
+
+.crt-scanline::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.015),
+    rgba(255, 255, 255, 0.015) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+.crt-scanline::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: -100% 0;
+  z-index: 11;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 255, 255, 0.02) 10%,
+    transparent 20%
+  );
+  animation: scanlineSweep 12s linear infinite;
+  will-change: transform;
+}
+
+@keyframes scanlineSweep {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(50%);
+  }
+}
+
+.hologram-grid {
+  position: relative;
+}
+
+.hologram-grid::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Custom Scrollbar Override (2px thin silver laser line) */
+::-webkit-scrollbar {
+  width: 2px !important;
+  height: 2px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.95) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(232, 237, 245, 0.4) !important;
+  border-radius: 0px !important;
+  box-shadow: 0 0 4px rgba(232, 237, 245, 0.5) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 1) !important;
+}
+
+/* Override Global selection highlights to dark charcoal and glowing silver text */
+::selection {
+  background-color: #1a1a1a !important;
+  color: #e8edf5 !important;
+  text-shadow: 0 0 8px rgba(232, 237, 245, 0.85) !important;
+}
+
+::-moz-selection {
+  background-color: #1a1a1a !important;
+  color: #e8edf5 !important;
+  text-shadow: 0 0 8px rgba(232, 237, 245, 0.85) !important;
+}
+
+
+
+
