@@ -69,8 +69,11 @@ export const Navbar = () => {
             aria-label="Primary"
             className={cn(
               "mars-nav-shell mobile-nav-glass flex items-center justify-between md:justify-center relative transition-all duration-300",
-              "w-[calc(100%-2rem)] mx-auto mt-4 rounded-full px-4 py-3.5 bg-black/50 backdrop-blur-md border border-white/10",
-              "md:w-fit md:mt-3 md:rounded-full md:border md:border-white/5 md:bg-transparent md:backdrop-blur-none",
+              "w-[calc(100%-2rem)] mx-auto mt-4 min-h-[64px] px-4 rounded-full z-50",
+              scrolled || mobileOpen
+                ? "max-md:bg-black/40 max-md:!backdrop-blur-lg max-md:border max-md:border-white/15"
+                : "max-md:bg-transparent max-md:border-transparent",
+              "md:w-fit md:mt-3 md:rounded-full md:border md:border-white/5 md:bg-transparent md:backdrop-blur-none md:min-h-0",
               scrolled 
                 ? "md:px-8 md:py-2.5" 
                 : "md:px-10 md:py-3.5",
@@ -143,7 +146,7 @@ export const Navbar = () => {
             <Link
               to="/"
               onClick={handleHomeClick}
-              className="mars-logo-mark absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-0.5 shrink-0 items-center justify-center md:hidden"
+              className="mars-logo-mark absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-0.5 items-center justify-center md:hidden"
               aria-label="MARS — home"
             >
               <img
@@ -166,7 +169,7 @@ export const Navbar = () => {
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
               className={cn(
-                "absolute right-4 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 transition md:hidden cursor-pointer",
+                "absolute right-4 top-1/2 -translate-y-1/2 inline-flex items-center justify-center transition md:hidden cursor-pointer",
                 scrolled ? "text-white/90 hover:text-white" : "text-white/60 hover:text-white",
               )}
             >
@@ -182,7 +185,7 @@ export const Navbar = () => {
               "transition-all duration-300 ease-in-out",
             )}
           >
-            <ul className="flex flex-col gap-2.5 p-4">
+            <ul className="flex flex-col gap-1 p-4">
               {[...LEFT_ITEMS, ...RIGHT_ITEMS].map((item) => (
                 <li key={item.label}>
                   <Link
@@ -193,9 +196,9 @@ export const Navbar = () => {
                         handleHomeClick(e);
                       }
                     }}
-                    className="block w-full text-center rounded-xl bg-white/5 border border-white/5 py-3 px-4 text-xs font-mono tracking-widest text-white/80 hover:text-white hover:bg-white/10 hover:border-white/10 transition-all duration-250 cursor-pointer"
+                    className="mars-nav-link block w-full rounded-none px-3 py-[0.5625rem]"
                   >
-                    {item.label.toUpperCase()}
+                    {item.label}
                   </Link>
                 </li>
               ))}

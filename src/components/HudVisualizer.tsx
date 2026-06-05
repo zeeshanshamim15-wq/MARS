@@ -167,29 +167,33 @@ export default function HudVisualizer({ activeIndex }: { activeIndex: number }) 
 
       {/* Floating Center Icon & Telemetry overlay with fade translation */}
       <div 
-        className={`absolute flex flex-col items-center justify-center transition-all duration-300 ${
+        className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-all duration-300 ${
           fade ? "opacity-0 scale-90 blur-sm" : "opacity-100 scale-100 blur-0"
         }`}
       >
-        <div className="h-16 w-16 rounded-full bg-black/90 border border-white/30 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.18),0_0_10px_rgba(255,255,255,0.1)] backdrop-blur-md z-10 transition-transform duration-300 hover:scale-105">
-          {localIndex === 0 && <Cpu className="h-7 w-7 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] anim-pulse-glow" />}
-          {localIndex === 1 && <Globe className="h-7 w-7 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] anim-pulse-glow" />}
-          {localIndex === 2 && <Video className="h-7 w-7 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] anim-pulse-glow" />}
-          {localIndex === 3 && <TrendingUp className="h-7 w-7 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] anim-pulse-glow" />}
-        </div>
+        <div className="relative flex flex-col items-center pointer-events-auto">
+          <div className="h-16 w-16 rounded-full bg-black/90 border border-white/30 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.18),0_0_10px_rgba(255,255,255,0.1)] backdrop-blur-md z-10 transition-transform duration-300 hover:scale-105">
+            {localIndex === 0 && <Cpu className="h-7 w-7 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] anim-pulse-glow" />}
+            {localIndex === 1 && <Globe className="h-7 w-7 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] anim-pulse-glow" />}
+            {localIndex === 2 && <Video className="h-7 w-7 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] anim-pulse-glow" />}
+            {localIndex === 3 && <TrendingUp className="h-7 w-7 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] anim-pulse-glow" />}
+          </div>
 
-        {/* Numerical coordinates below core */}
-        <div className="mt-3.5 font-mono text-[9px] text-white/70 tracking-[0.2em] uppercase">
-          {localIndex === 0 && "CORE_SYS // ACT_01"}
-          {localIndex === 1 && "DEV_OPS  // ACT_02"}
-          {localIndex === 2 && "GEN_VFX  // ACT_03"}
-          {localIndex === 3 && "STRAT_OPS// ACT_04"}
-        </div>
-        <div className="font-mono text-[8px] text-white/40 mt-1 select-none">
-          {localIndex === 0 && "INGESTION: 100_NOMINAL"}
-          {localIndex === 1 && "LHQ_PF: 99_OPTIMIZED"}
-          {localIndex === 2 && "GEN_RATE: 60FPS_4K"}
-          {localIndex === 3 && "ROI_VERT: 4.2X_CHECK"}
+          {/* Numerical coordinates below core */}
+          <div className="absolute top-[68px] flex flex-col items-center w-max">
+            <div className="font-mono text-[9px] text-white/70 tracking-[0.2em] uppercase">
+              {localIndex === 0 && "CORE_SYS // ACT_01"}
+              {localIndex === 1 && "DEV_OPS  // ACT_02"}
+              {localIndex === 2 && "GEN_VFX  // ACT_03"}
+              {localIndex === 3 && "STRAT_OPS// ACT_04"}
+            </div>
+            <div className="font-mono text-[8px] text-white/40 mt-1 select-none">
+              {localIndex === 0 && "INGESTION: 100_NOMINAL"}
+              {localIndex === 1 && "LHQ_PF: 99_OPTIMIZED"}
+              {localIndex === 2 && "GEN_RATE: 60FPS_4K"}
+              {localIndex === 3 && "ROI_VERT: 4.2X_CHECK"}
+            </div>
+          </div>
         </div>
       </div>
     </div>
