@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { audioSfx } from "@/lib/audioSfx";
 import { Cpu, DollarSign, Hourglass, TrendingUp } from "lucide-react";
 import BorderLaserCard from "./ui/BorderLaserCard";
 
@@ -24,9 +23,6 @@ export default function RoiAllocator() {
     setIsScrambling(true);
     let frames = 0;
     const maxFrames = 12;
-    
-    // Play a quick hover beep when changes trigger
-    audioSfx.playHover();
 
     const interval = setInterval(() => {
       if (frames >= maxFrames) {
@@ -77,7 +73,6 @@ export default function RoiAllocator() {
               <div className="flex gap-3">
                 <button
                   onClick={() => {
-                    audioSfx.playClick();
                     setChannel("leads");
                   }}
                   className={`flex-1 py-2 px-4 border text-xs text-center transition-all ${
@@ -90,7 +85,6 @@ export default function RoiAllocator() {
                 </button>
                 <button
                   onClick={() => {
-                    audioSfx.playClick();
                     setChannel("calls");
                   }}
                   className={`flex-1 py-2 px-4 border text-xs text-center transition-all ${

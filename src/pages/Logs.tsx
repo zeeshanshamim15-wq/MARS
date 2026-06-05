@@ -3,10 +3,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParallaxBackground from "@/components/ParallaxBackground";
 import WordReveal from "@/components/ui/WordReveal";
-import MetallicText from "@/components/ui/MetallicText";
 import BorderLaserCard from "@/components/ui/BorderLaserCard";
 import { Terminal, Database, Cpu, Radio, Shield, HelpCircle } from "lucide-react";
-import { audioSfx } from "@/lib/audioSfx";
 
 type LogEntry = {
   timestamp: string;
@@ -118,9 +116,7 @@ export default function Logs() {
                 {(["ALL", "SYSTEM", "ABDUL", "ORION", "SECURITY"] as const).map(cat => (
                   <button
                     key={cat}
-                    onMouseEnter={() => audioSfx.playHover()}
                     onClick={() => {
-                      audioSfx.playClick();
                       setFilter(cat);
                     }}
                     className={`h-7 px-3.5 rounded-none font-mono text-[10px] tracking-wider transition ${

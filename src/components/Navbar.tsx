@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { Menu, X, Volume2, VolumeX } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import marsLogo from "@/assets/mars-logo.png";
 import { Link, useLocation } from "react-router-dom";
-import { audioSfx } from "@/lib/audioSfx";
 import HoloConsole from "./HoloConsole";
 
 type NavItem = { label: string; to: string };
@@ -26,7 +25,6 @@ export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isConsoleOpen, setIsConsoleOpen] = useState(false);
-  const [isMuted, setIsMuted] = useState(audioSfx.getMuteState());
   const location = useLocation();
 
   useEffect(() => {
@@ -49,7 +47,6 @@ export const Navbar = () => {
   }, []);
 
   const handleHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    audioSfx.playClick();
     if (location.pathname === "/") {
       e.preventDefault();
       window.scrollTo({
@@ -57,12 +54,6 @@ export const Navbar = () => {
         behavior: "smooth",
       });
     }
-  };
-
-  const toggleMute = () => {
-    const nextMuted = !isMuted;
-    audioSfx.setMuteState(nextMuted);
-    setIsMuted(nextMuted);
   };
 
   return (
@@ -89,22 +80,10 @@ export const Navbar = () => {
               <button
                 type="button"
                 onClick={() => setIsConsoleOpen(true)}
-                onMouseEnter={() => audioSfx.playHover()}
                 className="text-[9px] font-mono uppercase tracking-[0.15em] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-none flex items-center gap-1.5 animate-pulse cursor-pointer"
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                 SYS_ONLINE
-              </button>
-              
-              {/* Audio mute switch */}
-              <button
-                type="button"
-                onClick={toggleMute}
-                onMouseEnter={() => audioSfx.playHover()}
-                className="text-white/60 hover:text-white transition duration-200 cursor-pointer"
-                aria-label={isMuted ? "Enable Audio" : "Mute Audio"}
-              >
-                {isMuted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
               </button>
             </div>
 
@@ -116,8 +95,7 @@ export const Navbar = () => {
                   <li key={item.label}>
                     <Link
                       to={item.to}
-                      onClick={item.to === "/" ? handleHomeClick : () => audioSfx.playClick()}
-                      onMouseEnter={() => audioSfx.playHover()}
+                      onClick={item.to === "/" ? handleHomeClick : undefined}
                       className="mars-nav-link"
                     >
                       {item.label}
@@ -130,7 +108,6 @@ export const Navbar = () => {
               <Link
                 to="/"
                 onClick={handleHomeClick}
-                onMouseEnter={() => audioSfx.playHover()}
                 className="mars-logo-mark mx-2 flex flex-col shrink-0 items-center justify-center"
                 aria-label="MARS — home"
               >
@@ -151,27 +128,12 @@ export const Navbar = () => {
                   <li key={item.label}>
                     <Link 
                       to={item.to} 
-                      onMouseEnter={() => audioSfx.playHover()}
-                      onClick={() => audioSfx.playClick()}
                       className="mars-nav-link"
                     >
                       {item.label}
                     </Link>
                   </li>
                 ))}
-                
-                {/* Audio Controls Switch (Desktop) */}
-                <li className="flex items-center ml-2 border-l border-white/10 pl-4">
-                  <button
-                    type="button"
-                    onClick={toggleMute}
-                    onMouseEnter={() => audioSfx.playHover()}
-                    className="text-white/60 hover:text-white transition duration-200 cursor-pointer"
-                    title={isMuted ? "Enable Audio" : "Mute Audio"}
-                  >
-                    {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-                  </button>
-                </li>
               </ul>
             </div>
 
@@ -179,7 +141,6 @@ export const Navbar = () => {
             <Link
               to="/"
               onClick={handleHomeClick}
-              onMouseEnter={() => audioSfx.playHover()}
               className="mars-logo-mark flex flex-col shrink-0 items-center justify-center md:hidden"
               aria-label="MARS — home"
             >
@@ -198,10 +159,8 @@ export const Navbar = () => {
             <button
               type="button"
               onClick={() => {
-                audioSfx.playClick();
                 setMobileOpen((v) => !v);
               }}
-              onMouseEnter={() => audioSfx.playHover()}
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
               className={cn(
@@ -230,11 +189,8 @@ export const Navbar = () => {
                       setMobileOpen(false);
                       if (item.to === "/") {
                         handleHomeClick(e);
-                      } else {
-                        audioSfx.playClick();
                       }
                     }}
-                    onMouseEnter={() => audioSfx.playHover()}
                     className="mars-nav-link block w-full rounded-none px-3 py-[0.5625rem]"
                   >
                     {item.label}

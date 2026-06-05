@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { Terminal as TerminalIcon, X, TerminalSquare } from "lucide-react";
-import { audioSfx } from "@/lib/audioSfx";
 
 interface LogLine {
   text: string;
@@ -24,7 +23,6 @@ export default function HoloConsole({ isOpen, onClose }: { isOpen: boolean; onCl
     if (isOpen) {
       setTimeout(() => {
         inputRef.current?.focus();
-        audioSfx.playBeep();
       }, 50);
     }
   }, [isOpen]);
@@ -41,7 +39,6 @@ export default function HoloConsole({ isOpen, onClose }: { isOpen: boolean; onCl
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
         onClose();
-        audioSfx.playClick();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -53,9 +50,6 @@ export default function HoloConsole({ isOpen, onClose }: { isOpen: boolean; onCl
   const handleCommand = (cmdStr: string) => {
     const trimmed = cmdStr.trim().toLowerCase();
     if (!trimmed) return;
-
-    // Play click sound on submit
-    audioSfx.playClick();
 
     const newLines: LogLine[] = [
       { text: `guest@mars:~$ ${cmdStr}`, type: "input" }
@@ -124,7 +118,6 @@ export default function HoloConsole({ isOpen, onClose }: { isOpen: boolean; onCl
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputVal(e.target.value);
-    audioSfx.playHover(); // Soft click sound while typing
   };
 
   return (
@@ -148,7 +141,6 @@ export default function HoloConsole({ isOpen, onClose }: { isOpen: boolean; onCl
           </div>
           <button
             onClick={() => {
-              audioSfx.playClick();
               onClose();
             }}
             className="text-white/40 hover:text-white transition-colors cursor-pointer"

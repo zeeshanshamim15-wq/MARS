@@ -5,7 +5,6 @@ import ParallaxBackground from "@/components/ParallaxBackground";
 import WordReveal from "@/components/ui/WordReveal";
 import { CheckCircle2, ClipboardList, Eye, Milestone, PlayCircle, Settings, Users } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { audioSfx } from "@/lib/audioSfx";
 
 interface MatrixDecryptProps {
   text: string;
@@ -150,9 +149,7 @@ export default function Process() {
             {STAGES.map((stage, idx) => (
               <button
                 key={idx}
-                onMouseEnter={() => audioSfx.playHover()}
                 onClick={() => {
-                  audioSfx.playClick();
                   setActiveTab(idx);
                 }}
                 className={`flex-1 min-w-[70px] py-2 px-2.5 text-center border transition-all duration-300 rounded-none ${

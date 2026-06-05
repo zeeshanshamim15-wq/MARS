@@ -1,16 +1,12 @@
 import { useLocation, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ShieldAlert, Terminal, RefreshCw } from "lucide-react";
-import { audioSfx } from "@/lib/audioSfx";
 
 export default function NotFound() {
   const location = useLocation();
   const [dots, setDots] = useState("");
 
   useEffect(() => {
-    // Play error beep diagnostic chime
-    audioSfx.playBeep();
-
     // Small blinking loading dots simulation
     const interval = setInterval(() => {
       setDots((prev) => (prev.length >= 3 ? "" : prev + "."));
@@ -77,8 +73,6 @@ export default function NotFound() {
 
           <Link
             to="/"
-            onMouseEnter={() => audioSfx.playHover()}
-            onClick={() => audioSfx.playSuccess()}
             className="w-full sm:w-auto text-center px-6 py-2.5 bg-red-950/20 border border-red-500 text-red-500 hover:bg-red-500/10 transition-all uppercase tracking-widest text-[10px] font-bold font-mono rounded-none"
           >
             [ RETURN TO CORE ]

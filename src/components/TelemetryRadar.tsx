@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-import { audioSfx } from "@/lib/audioSfx";
 import { Terminal as TerminalIcon } from "lucide-react";
 
 interface NodePing {
@@ -59,9 +58,6 @@ export default function TelemetryRadar() {
         if (next.length > 20) next.shift();
         return next;
       });
-
-      // Optional sound chirp (low volume beep)
-      audioSfx.playHover();
 
       // Clean up ping after 1.5 seconds
       setTimeout(() => {

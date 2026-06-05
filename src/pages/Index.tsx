@@ -4,7 +4,6 @@ import Footer from "@/components/Footer";
 import ParallaxBackground from "@/components/ParallaxBackground";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { audioSfx } from "@/lib/audioSfx";
 import type { Group } from "three";
 import MetallicText from "@/components/ui/MetallicText";
 import WordReveal from "@/components/ui/WordReveal";
@@ -285,7 +284,6 @@ export default function Index() {
         setTimeout(() => {
           setIsTransmitting(false);
           setIsCompleted(true);
-          audioSfx.playSuccess();
         }, 800);
       }
     }, 450);
@@ -321,7 +319,6 @@ export default function Index() {
             <div 
               onClick={() => {
                 window.dispatchEvent(new KeyboardEvent("keydown", { key: "`" }));
-                audioSfx.playBeep();
               }}
               className="absolute top-6 left-8 text-[9px] font-mono uppercase tracking-[0.25em] text-white/30 flex items-center gap-2 pointer-events-auto cursor-pointer hover:text-white transition duration-200"
             >
@@ -359,16 +356,12 @@ export default function Index() {
             <div className="mt-12 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 px-6 sm:px-0 w-full sm:w-auto">
               <a
                 href="#services"
-                onMouseEnter={() => audioSfx.playHover()}
-                onClick={() => audioSfx.playClick()}
                 className="inline-flex h-12 items-center justify-center rounded-none bg-white px-8 text-sm font-semibold text-black transition-transform duration-200 hover:scale-[1.02] shadow-lg shadow-white/10"
               >
                 Explore Services
               </a>
               <a
                 href="#contact"
-                onMouseEnter={() => audioSfx.playHover()}
-                onClick={() => audioSfx.playClick()}
                 className="inline-flex h-12 items-center justify-center rounded-none border border-white/15 bg-white/5 backdrop-blur-md px-8 text-sm font-semibold text-white/90 transition-colors hover:bg-white/10"
               >
                 Transmission Terminal
@@ -572,10 +565,8 @@ export default function Index() {
                     <button
                       key={index}
                       onClick={() => {
-                        audioSfx.playClick();
                         scrollToCard(index);
                       }}
-                      onMouseEnter={() => audioSfx.playHover()}
                       className={`h-1 rounded-none transition-all duration-300 ${
                         hoveredService === index
                           ? "w-6 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
@@ -1043,7 +1034,6 @@ export default function Index() {
                             disabled={isTransmitting}
                             value={form.name}
                             onChange={(e) => setForm({ ...form, name: e.target.value })}
-                            onMouseEnter={() => audioSfx.playHover()}
                             placeholder="ENTER FULL NAME"
                             className="w-full h-11 px-4 text-xs bg-white/5 hover:bg-white/10 focus:bg-white/10 border border-white/10 focus:border-white/25 rounded-none md:rounded-xl text-white outline-none transition disabled:opacity-50"
                           />
@@ -1057,7 +1047,6 @@ export default function Index() {
                             disabled={isTransmitting}
                             value={form.email}
                             onChange={(e) => setForm({ ...form, email: e.target.value })}
-                            onMouseEnter={() => audioSfx.playHover()}
                             placeholder="ENTER EMAIL ADDRESS"
                             className="w-full h-11 px-4 text-xs bg-white/5 hover:bg-white/10 focus:bg-white/10 border border-white/10 focus:border-white/25 rounded-none md:rounded-xl text-white outline-none transition disabled:opacity-50"
                           />
@@ -1069,7 +1058,6 @@ export default function Index() {
                             disabled={isTransmitting}
                             value={form.need}
                             onChange={(e) => setForm({ ...form, need: e.target.value })}
-                            onMouseEnter={() => audioSfx.playHover()}
                             className="w-full h-11 px-4 text-xs bg-white/5 border border-white/10 rounded-none md:rounded-xl text-white/80 outline-none hover:bg-white/10 focus:bg-white/10 transition disabled:opacity-50 appearance-none cursor-pointer"
                           >
                             <option value="Automation" className="bg-[#0A0A0A] text-white">Intelligent Automation Systems</option>
@@ -1085,7 +1073,6 @@ export default function Index() {
                             disabled={isTransmitting}
                             value={form.message}
                             onChange={(e) => setForm({ ...form, message: e.target.value })}
-                            onMouseEnter={() => audioSfx.playHover()}
                             placeholder="ENTER DETAILS ON BOTTLE-NECKS OR PROJECT OBJECTIVES..."
                             className="w-full h-24 p-4 text-xs bg-white/5 hover:bg-white/10 focus:bg-white/10 border border-white/10 focus:border-white/25 rounded-none md:rounded-xl text-white outline-none resize-none transition disabled:opacity-50"
                           />
@@ -1107,8 +1094,6 @@ export default function Index() {
                         ) : (
                           <button
                             type="submit"
-                            onMouseEnter={() => audioSfx.playHover()}
-                            onClick={() => audioSfx.playClick()}
                             className="w-full h-11 bg-white hover:bg-white/95 text-black font-semibold text-xs rounded-none md:rounded-xl flex items-center justify-center gap-2 transition hover:scale-[1.01]"
                           >
                             <Send className="h-3.5 w-3.5" />

@@ -6,7 +6,6 @@ import { Check, Info, BadgeDollarSign, ShieldAlert, HeartHandshake, Table } from
 import BorderLaserCard from "@/components/ui/BorderLaserCard";
 import WordReveal from "@/components/ui/WordReveal";
 import MetallicText from "@/components/ui/MetallicText";
-import { audioSfx } from "@/lib/audioSfx";
 
 const PLANS = [
   {
@@ -198,8 +197,6 @@ export default function Pricing() {
               </div>
 
               <button
-                onMouseEnter={() => audioSfx.playHover()}
-                onClick={() => audioSfx.playClick()}
                 className={`w-full py-2.5 rounded-none md:rounded-xl text-xs font-semibold transition z-20 relative ${
                   plan.isPopular
                     ? "bg-white text-black hover:scale-[1.02]"

@@ -5,7 +5,6 @@ import ParallaxBackground from "@/components/ParallaxBackground";
 import WordReveal from "@/components/ui/WordReveal";
 import MetallicText from "@/components/ui/MetallicText";
 import BorderLaserCard from "@/components/ui/BorderLaserCard";
-import { audioSfx } from "@/lib/audioSfx";
 import {
   MessageSquare,
   Bot,
@@ -104,7 +103,6 @@ export default function Services() {
 
   const handleOptionClick = (option: typeof CHAT_OPTIONS[0]) => {
     if (isTyping) return;
-    audioSfx.playBeep();
 
     // Add user message
     const userTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -413,7 +411,6 @@ export default function Services() {
                     <button
                       key={opt.id}
                       onClick={() => handleOptionClick(opt)}
-                      onMouseEnter={() => audioSfx.playHover()}
                       disabled={isTyping}
                       className="text-[10px] bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white/80 hover:text-white px-3 py-1.5 rounded-none transition duration-150 ease-in-out disabled:opacity-50 font-mono"
                     >
