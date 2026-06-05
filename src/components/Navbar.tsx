@@ -166,23 +166,23 @@ export const Navbar = () => {
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
               className={cn(
-                "absolute right-4 top-1/2 -translate-y-1/2 inline-flex h-[1.875rem] w-[1.875rem] items-center justify-center rounded-none border border-white/10 bg-white/5 transition md:hidden cursor-pointer",
+                "absolute right-4 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 transition md:hidden cursor-pointer",
                 scrolled ? "text-white/90 hover:text-white" : "text-white/60 hover:text-white",
               )}
             >
-              {mobileOpen ? <X className="h-[0.9375rem] w-[0.9375rem]" /> : <Menu className="h-[0.9375rem] w-[0.9375rem]" />}
+              {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
           </nav>
 
           {/* Mobile menu drop-down list */}
           <div
             className={cn(
-              "mars-nav-shell mobile-nav-glass mt-2 overflow-hidden w-[calc(100%-2rem)] mx-auto rounded-2xl border border-white/10 bg-black/50 backdrop-blur-md md:hidden",
-              mobileOpen ? "max-h-96 opacity-100" : "pointer-events-none max-h-0 opacity-0",
+              "mars-nav-shell mobile-nav-glass mt-2 overflow-hidden w-[calc(100%-2rem)] mx-auto rounded-2xl border border-white/10 bg-black/80 backdrop-blur-md md:hidden",
+              mobileOpen ? "max-h-[500px] opacity-100" : "pointer-events-none max-h-0 opacity-0",
               "transition-all duration-300 ease-in-out",
             )}
           >
-            <ul className="flex flex-col gap-[0.1875rem] p-3">
+            <ul className="flex flex-col gap-2.5 p-4">
               {[...LEFT_ITEMS, ...RIGHT_ITEMS].map((item) => (
                 <li key={item.label}>
                   <Link
@@ -193,9 +193,9 @@ export const Navbar = () => {
                         handleHomeClick(e);
                       }
                     }}
-                    className="mars-nav-link block w-full rounded-none px-3 py-[0.5625rem]"
+                    className="block w-full text-center rounded-xl bg-white/5 border border-white/5 py-3 px-4 text-xs font-mono tracking-widest text-white/80 hover:text-white hover:bg-white/10 hover:border-white/10 transition-all duration-250 cursor-pointer"
                   >
-                    {item.label}
+                    {item.label.toUpperCase()}
                   </Link>
                 </li>
               ))}
