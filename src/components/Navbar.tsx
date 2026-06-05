@@ -141,7 +141,7 @@ export const Navbar = () => {
             <Link
               to="/"
               onClick={handleHomeClick}
-              className="mars-logo-mark flex flex-col shrink-0 items-center justify-center md:hidden"
+              className="mars-logo-mark absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col shrink-0 items-center justify-center md:hidden"
               aria-label="MARS — home"
             >
               <img
@@ -165,7 +165,7 @@ export const Navbar = () => {
               aria-expanded={mobileOpen}
               className={cn(
                 "absolute right-4 inline-flex h-[1.875rem] w-[1.875rem] items-center justify-center rounded-none border border-white/10 bg-white/5 transition md:hidden cursor-pointer",
-                scrolled ? "text-white/90 hover:text-white" : "text-foreground/80 hover:text-foreground",
+                scrolled ? "text-white/90 hover:text-white" : "text-white/60 hover:text-white",
               )}
             >
               {mobileOpen ? <X className="h-[0.9375rem] w-[0.9375rem]" /> : <Menu className="h-[0.9375rem] w-[0.9375rem]" />}
