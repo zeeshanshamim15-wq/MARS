@@ -68,10 +68,12 @@ export const Navbar = () => {
           <nav
             aria-label="Primary"
             className={cn(
-              "mars-nav-shell flex items-center justify-between md:justify-center w-full md:w-fit mx-auto mt-0 md:mt-3 rounded-none md:rounded-full border-x-0 border-t-0 border-b border-white/5 md:border relative transition-all duration-300",
+              "mars-nav-shell mobile-nav-glass flex items-center justify-between md:justify-center relative transition-all duration-300",
+              "w-[calc(100%-2rem)] mx-auto mt-4 rounded-full px-4 py-2.5 bg-black/50 backdrop-blur-md border border-white/10",
+              "md:w-fit md:mt-3 md:rounded-full md:border md:border-white/5 md:bg-transparent md:backdrop-blur-none",
               scrolled 
-                ? "px-5 py-2.5 md:px-8 md:py-2.5" 
-                : "px-6 py-3.5 md:px-10 md:py-3.5",
+                ? "md:px-8 md:py-2.5" 
+                : "md:px-10 md:py-3.5",
             )}
           >
             {/* Mobile Left HUD accessories */}
@@ -175,7 +177,7 @@ export const Navbar = () => {
           {/* Mobile menu drop-down list */}
           <div
             className={cn(
-              "mars-nav-shell mt-0 overflow-hidden rounded-none border-x-0 border-t-0 border-b border-white/10 md:hidden",
+              "mars-nav-shell mobile-nav-glass mt-2 overflow-hidden w-[calc(100%-2rem)] mx-auto rounded-2xl border border-white/10 bg-black/50 backdrop-blur-md md:hidden",
               mobileOpen ? "max-h-96 opacity-100" : "pointer-events-none max-h-0 opacity-0",
               "transition-all duration-300 ease-in-out",
             )}
