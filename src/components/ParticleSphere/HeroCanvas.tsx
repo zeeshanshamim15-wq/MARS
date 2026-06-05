@@ -12,11 +12,15 @@ type HeroCanvasProps = {
 };
 
 export default function HeroCanvas({ sphereRef, morphProgressRef, explodeProgressRef }: HeroCanvasProps) {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
@@ -28,7 +32,7 @@ export default function HeroCanvas({ sphereRef, morphProgressRef, explodeProgres
       camera={{ position: [0, 0, 7.5], fov: 50 }}
       dpr={dprProps}
       gl={{
-        antialias: false,
+        antialias: !isMobile,
         alpha: true,
         powerPreference: "high-performance",
       }}

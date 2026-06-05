@@ -488,6 +488,13 @@
   text-shadow: 0 0 8px rgba(232, 237, 245, 0.85) !important;
 }
 
+.gpu-accelerate {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+
 
 
 

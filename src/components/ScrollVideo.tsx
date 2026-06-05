@@ -457,6 +457,7 @@ export default function ScrollVideo() {
         end: "+=1300%",
         pin: true,
         scrub: 0.8,
+        fastScrollEnd: true,
         anticipatePin: 1,
         onUpdate: (self) => {
           const p = self.progress;
@@ -641,7 +642,7 @@ export default function ScrollVideo() {
             {/* Inner frame containers */}
             <div
               ref={card1Ref}
-              className="absolute inset-0 w-full h-full"
+              className="absolute inset-0 w-full h-full gpu-accelerate"
               style={{ ...cardStyle, zIndex: 1 }}
             >
               {cardHighlight}
@@ -654,7 +655,7 @@ export default function ScrollVideo() {
 
             <div
               ref={card2Ref}
-              className="absolute inset-0 w-full h-full"
+              className="absolute inset-0 w-full h-full gpu-accelerate"
               style={{ ...cardStyle, zIndex: 2 }}
             >
               {cardHighlight}

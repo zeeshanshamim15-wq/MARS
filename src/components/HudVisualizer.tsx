@@ -26,7 +26,7 @@ export default function HudVisualizer({ activeIndex }: { activeIndex: number }) 
   }, []);
 
   return (
-    <div className="relative w-full max-w-[240px] md:max-w-[360px] aspect-square flex items-center justify-center z-10 select-none">
+    <div className="relative w-full max-w-[240px] md:max-w-[360px] aspect-square flex items-center justify-center z-10 select-none gpu-accelerate">
       <style>{`
         @keyframes spinClockwise {
           0% { transform: rotate(0deg); }

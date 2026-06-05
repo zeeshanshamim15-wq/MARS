@@ -130,7 +130,7 @@ export default function HoloConsole({ isOpen, onClose }: { isOpen: boolean; onCl
         }}
       />
       
-      <div className="relative w-full max-w-4xl h-[80vh] bg-black/90 border border-white/10 rounded-none shadow-[0_0_40px_rgba(255,255,255,0.05)] flex flex-col overflow-hidden">
+      <div className="relative w-full max-w-4xl h-[80vh] bg-black/90 border border-white/10 rounded-none shadow-[0_0_40px_rgba(255,255,255,0.05)] flex flex-col overflow-hidden gpu-accelerate">
         {/* Terminal Header */}
         <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.01] px-5 py-3">
           <div className="flex items-center gap-2">

@@ -71,7 +71,7 @@ export default function BorderLaserCard({
     <div
       id={id}
       ref={cardRef}
-      className={`relative overflow-hidden crt-scanline hologram-grid ${className}`}
+      className={`relative overflow-hidden crt-scanline hologram-grid gpu-accelerate ${className}`}
       style={{
         borderRadius: `${borderRadius}px`,
         background: "#0D0D0D"

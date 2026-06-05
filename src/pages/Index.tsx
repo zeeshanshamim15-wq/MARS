@@ -213,7 +213,8 @@ export default function Index() {
           trigger,
           start: "top top",
           end: isMobileDevice ? "+=120%" : "+=180%",
-          scrub: isMobileDevice ? 0.3 : 1.2,
+          scrub: isMobileDevice ? 0.5 : 1.2,
+          fastScrollEnd: true,
           onUpdate: (self) => {
             explodeProgressRef.current = self.progress;
           }
@@ -434,7 +435,7 @@ export default function Index() {
                     <div className="w-[8vw] shrink-0 pointer-events-none" />
 
                     {/* Vertical 1: Automation */}
-                    <div className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center ${
+                    <div className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center gpu-accelerate ${
                       hoveredService === 0 
                         ? "scale-100 opacity-100 shadow-[0_0_25px_rgba(255,255,255,0.12)]" 
                         : "scale-[0.85] opacity-40 blur-[0.3px]"
@@ -463,7 +464,7 @@ export default function Index() {
                     </div>
 
                     {/* Vertical 2: Web Dev */}
-                    <div className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center ${
+                    <div className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center gpu-accelerate ${
                       hoveredService === 1 
                         ? "scale-100 opacity-100 shadow-[0_0_25px_rgba(255,255,255,0.12)]" 
                         : "scale-[0.85] opacity-40 blur-[0.3px]"
@@ -497,7 +498,7 @@ export default function Index() {
                     </div>
 
                     {/* Vertical 3: Filmmaking */}
-                    <div className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center ${
+                    <div className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center gpu-accelerate ${
                       hoveredService === 2 
                         ? "scale-100 opacity-100 shadow-[0_0_25px_rgba(255,255,255,0.12)]" 
                         : "scale-[0.85] opacity-40 blur-[0.3px]"
@@ -526,7 +527,7 @@ export default function Index() {
                     </div>
 
                     {/* Vertical 4: Consulting */}
-                    <div className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center ${
+                    <div className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center gpu-accelerate ${
                       hoveredService === 3 
                         ? "scale-100 opacity-100 shadow-[0_0_25px_rgba(255,255,255,0.12)]" 
                         : "scale-[0.85] opacity-40 blur-[0.3px]"

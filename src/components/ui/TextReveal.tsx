@@ -26,6 +26,7 @@ export default function TextReveal({ text, className = "" }: { text: string; cla
         trigger: el,
         start: "top 90%",
         toggleActions: "play none none none",
+        fastScrollEnd: true,
       },
       onUpdate: () => {
         const p = obj.progress;
