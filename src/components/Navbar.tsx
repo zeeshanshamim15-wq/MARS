@@ -69,7 +69,7 @@ export const Navbar = () => {
             aria-label="Primary"
             className={cn(
               "mars-nav-shell mobile-nav-glass flex items-center justify-between md:justify-center relative transition-all duration-300",
-              "w-[calc(100%-2rem)] mx-auto mt-4 rounded-full px-4 py-2.5 bg-black/50 backdrop-blur-md border border-white/10",
+              "w-[calc(100%-2rem)] mx-auto mt-4 rounded-full px-4 py-3.5 bg-black/50 backdrop-blur-md border border-white/10",
               "md:w-fit md:mt-3 md:rounded-full md:border md:border-white/5 md:bg-transparent md:backdrop-blur-none",
               scrolled 
                 ? "md:px-8 md:py-2.5" 
@@ -77,7 +77,7 @@ export const Navbar = () => {
             )}
           >
             {/* Mobile Left HUD accessories */}
-            <div className="flex items-center gap-3 md:hidden absolute left-4">
+            <div className="flex items-center gap-3 md:hidden absolute left-4 top-1/2 -translate-y-1/2">
               {/* Telemetry Console Toggle */}
               <button
                 type="button"
@@ -143,16 +143,16 @@ export const Navbar = () => {
             <Link
               to="/"
               onClick={handleHomeClick}
-              className="mars-logo-mark absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col shrink-0 items-center justify-center md:hidden"
+              className="mars-logo-mark absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-0.5 shrink-0 items-center justify-center md:hidden"
               aria-label="MARS — home"
             >
               <img
                 src={marsLogo}
                 alt="MARS"
-                className="h-[2.35rem] w-[2.35rem] object-contain"
+                className="h-[2.1rem] w-[2.1rem] object-contain"
                 draggable={false}
               />
-              <span className="mars-logo-text text-[0.5rem] font-bold tracking-[0.25em] text-white/80 uppercase mt-0.5 leading-none transition-all duration-300">
+              <span className="mars-logo-text text-[0.5rem] font-bold tracking-[0.25em] text-white/80 uppercase leading-none transition-all duration-300">
                 MARS
               </span>
             </Link>
@@ -166,7 +166,7 @@ export const Navbar = () => {
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
               className={cn(
-                "absolute right-4 inline-flex h-[1.875rem] w-[1.875rem] items-center justify-center rounded-none border border-white/10 bg-white/5 transition md:hidden cursor-pointer",
+                "absolute right-4 top-1/2 -translate-y-1/2 inline-flex h-[1.875rem] w-[1.875rem] items-center justify-center rounded-none border border-white/10 bg-white/5 transition md:hidden cursor-pointer",
                 scrolled ? "text-white/90 hover:text-white" : "text-white/60 hover:text-white",
               )}
             >
