@@ -460,9 +460,9 @@ export default function Index() {
     const swiper = swiperRef.current;
     if (!swiper) return;
 
-    // Filter out style elements and spacer containers
+    // Filter out style elements and spacer containers using snap-center class
     const cards = Array.from(swiper.children).filter(
-      (child) => child.tagName === "DIV" && !child.classList.contains("pointer-events-none")
+      (child) => child.classList.contains("snap-center")
     );
     if (cards.length === 0) return;
 
@@ -490,7 +490,7 @@ export default function Index() {
     if (!swiper) return;
 
     const cards = Array.from(swiper.children).filter(
-      (child) => child.tagName === "DIV" && !child.classList.contains("pointer-events-none")
+      (child) => child.classList.contains("snap-center")
     );
     const card = cards[index] as HTMLElement;
     if (card) {
