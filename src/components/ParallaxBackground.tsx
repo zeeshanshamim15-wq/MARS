@@ -1,10 +1,10 @@
 import { useEffect, useRef, useCallback } from "react";
 
 /**
- * Cursor-driven parallax background.
+ * Parallax background driven by desktop mouse pointer or mobile gyroscope.
  *
  * Renders a full-viewport fixed background image that shifts subtly
- * in the opposite direction of the cursor, creating a depth illusion.
+ * in the opposite direction of the cursor/tilt, creating a depth illusion.
  * The image is scaled slightly larger than the viewport to allow
  * room for the parallax movement without revealing edges.
  */
@@ -30,7 +30,11 @@ export default function ParallaxBackground({ src = "/nebula.jpg" }: { src?: stri
   }, []);
 
   useEffect(() => {
+    // Desktop mousemove listener
     const handleMove = (e: PointerEvent) => {
+      // Ignore touch gestures to avoid conflicts with gyroscope parallax
+      if (e.pointerType === "touch") return;
+
       /* normalize to [-1, 1] */
       const nx = (e.clientX / window.innerWidth) * 2 - 1;
       const ny = (e.clientY / window.innerHeight) * 2 - 1;
@@ -41,10 +45,93 @@ export default function ParallaxBackground({ src = "/nebula.jpg" }: { src?: stri
     };
 
     window.addEventListener("pointermove", handleMove, { passive: true });
+
+    // Gyroscope tracking references
+    const hasBaseline = { current: false };
+    const baseline = { current: { beta: 60, gamma: 0 } };
+
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      const { beta, gamma } = e;
+      if (beta === null || gamma === null) return;
+
+      if (!hasBaseline.current) {
+        baseline.current = { beta, gamma };
+        hasBaseline.current = true;
+      } else {
+        // Slow auto-calibration/drift correction (0.5% weight)
+        // Helps adapt to changes in how the user naturally holds their phone
+        baseline.current.beta = baseline.current.beta * 0.995 + beta * 0.005;
+        baseline.current.gamma = baseline.current.gamma * 0.995 + gamma * 0.005;
+      }
+
+      const deltaBeta = beta - baseline.current.beta;
+      const deltaGamma = gamma - baseline.current.gamma;
+
+      // Constrain tilt angle ranges to [-45, 45] degrees
+      const MAX_TILT = 45;
+      const nx = Math.max(-1, Math.min(1, deltaGamma / MAX_TILT));
+      const ny = Math.max(-1, Math.min(1, deltaBeta / MAX_TILT));
+
+      // Update target positions for smooth LERP interpolation
+      target.current.x = -nx * PARALLAX_STRENGTH;
+      target.current.y = -ny * PARALLAX_STRENGTH;
+    };
+
+    let gyroActive = false;
+
+    // Helper to safely request iOS permissions and bind orientation listener
+    const bindGyro = () => {
+      if (
+        typeof DeviceOrientationEvent !== "undefined" &&
+        typeof (DeviceOrientationEvent as any).requestPermission === "function"
+      ) {
+        // iOS 13+ requires user interaction to request permission
+        const requestPermissionAndBind = async () => {
+          try {
+            const status = await (DeviceOrientationEvent as any).requestPermission();
+            if (status === "granted" && !gyroActive) {
+              gyroActive = true;
+              window.addEventListener("deviceorientation", handleOrientation, { passive: true });
+            }
+          } catch (err) {
+            console.warn("DeviceOrientation permission error:", err);
+          }
+        };
+
+        const onFirstInteraction = () => {
+          requestPermissionAndBind();
+          window.removeEventListener("touchstart", onFirstInteraction);
+          window.removeEventListener("pointerdown", onFirstInteraction);
+        };
+
+        window.addEventListener("touchstart", onFirstInteraction, { passive: true });
+        window.addEventListener("pointerdown", onFirstInteraction, { passive: true });
+
+        return () => {
+          window.removeEventListener("touchstart", onFirstInteraction);
+          window.removeEventListener("pointerdown", onFirstInteraction);
+          if (gyroActive) {
+            window.removeEventListener("deviceorientation", handleOrientation);
+          }
+        };
+      } else {
+        // Android / non-iOS / legacy browsers
+        window.addEventListener("deviceorientation", handleOrientation, { passive: true });
+        gyroActive = true;
+        return () => {
+          if (gyroActive) {
+            window.removeEventListener("deviceorientation", handleOrientation);
+          }
+        };
+      }
+    };
+
+    const unbindGyro = bindGyro();
     rafId.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("pointermove", handleMove);
+      if (unbindGyro) unbindGyro();
       cancelAnimationFrame(rafId.current);
     };
   }, [animate]);
