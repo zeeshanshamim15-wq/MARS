@@ -175,29 +175,31 @@
 
   .mars-logo-mark {
     display: inline-flex;
-    transition: transform 0.3s ease, filter 0.3s ease;
-    will-change: transform, filter;
+    transition: filter 0.3s ease;
+    will-change: filter;
   }
   .mars-logo-mark img {
     /* logo is white — keep as-is on dark hero and dark glass */
     filter: none;
     transition: filter 0.4s ease, opacity 0.3s ease;
   }
-  .mars-logo-mark:hover {
-    transform: scale(1.05);
-  }
-  .mars-logo-mark:hover img {
-    filter: drop-shadow(0 0 10px hsl(var(--nav-glow) / 0.55))
-      drop-shadow(0 0 24px hsl(var(--nav-glow) / 0.25));
+  .mars-logo-mark:hover img,
+  .mars-logo-mark:focus-visible img,
+  .mars-logo-mark:active img {
+    filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.6))
+      drop-shadow(0 0 20px rgba(52, 211, 153, 0.3))
+      drop-shadow(0 0 2px rgba(255, 255, 255, 0.8));
   }
   .mars-logo-text {
     transition: color 0.3s ease, text-shadow 0.3s ease;
   }
-  .mars-logo-mark:hover .mars-logo-text {
-    color: hsl(0 0% 100%);
+  .mars-logo-mark:hover .mars-logo-text,
+  .mars-logo-mark:focus-visible .mars-logo-text,
+  .mars-logo-mark:active .mars-logo-text {
+    color: #34d399; /* emerald green text */
     text-shadow:
-      0 0 10px hsl(var(--nav-glow) / 0.55),
-      0 0 20px hsl(var(--nav-glow) / 0.25);
+      0 0 8px rgba(52, 211, 153, 0.6),
+      0 0 16px rgba(52, 211, 153, 0.3);
   }
 
   .mars-nav-shell {

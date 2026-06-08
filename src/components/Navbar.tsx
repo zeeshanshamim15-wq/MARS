@@ -113,7 +113,10 @@ export const Navbar = () => {
               {/* Center logo */}
               <Link
                 to="/"
-                onClick={handleHomeClick}
+                onClick={(e) => {
+                  setMobileOpen(false);
+                  handleHomeClick(e);
+                }}
                 className="mars-logo-mark mx-2 flex flex-col shrink-0 items-center justify-center"
                 aria-label="MARS — home"
               >
@@ -146,7 +149,10 @@ export const Navbar = () => {
             {/* Mobile View center logo */}
             <Link
               to="/"
-              onClick={handleHomeClick}
+              onClick={(e) => {
+                setMobileOpen(false);
+                handleHomeClick(e);
+              }}
               className="mars-logo-mark absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-0.5 items-center justify-center md:hidden"
               aria-label="MARS — home"
             >
