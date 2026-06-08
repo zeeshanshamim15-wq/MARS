@@ -1,4 +1,5 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState, useMemo, useCallback, memo } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParallaxBackground from "@/components/ParallaxBackground";
@@ -55,6 +56,356 @@ const DOSSIERS = [
     rep: "Operations VP, SMB Logistics"
   }
 ];
+
+// Sub-component for isolated log terminal to prevent global console re-renders
+const TelemetryLogsTerminal = memo(function TelemetryLogsTerminal({ logPool }: { logPool: string[] }) {
+  const [logs, setLogs] = useState<string[]>([]);
+
+  useEffect(() => {
+    setLogs([]);
+    let idx = 0;
+    const interval = setInterval(() => {
+      if (idx < logPool.length) {
+        setLogs((prev) => [...prev, logPool[idx]]);
+        idx++;
+      } else {
+        idx = 0;
+        setLogs([]);
+      }
+    }, 1200);
+
+    return () => clearInterval(interval);
+  }, [logPool]);
+
+  return (
+    <div className="font-mono text-[9px] text-emerald-400/80 bg-black/60 p-4 border border-white/5 rounded-xl h-24 overflow-y-auto flex flex-col gap-1 w-full scrollbar-none select-none">
+      {logs.map((log, i) => (
+        <div key={i} className="leading-relaxed flex gap-2">
+          <span className="text-emerald-500/50">&gt;</span>
+          <span>{log}</span>
+        </div>
+      ))}
+      {logs.length < logPool.length && (
+        <div className="text-emerald-500/30 animate-pulse">&gt; STREAMING NETWORK REGISTRY TELEMETRY...</div>
+      )}
+    </div>
+  );
+});
+
+// Sub-component for the heavy SVG chart grid to avoid redraws on scrolling logs
+const TelemetryScopeChart = memo(function TelemetryScopeChart({
+  nodes,
+  scraped,
+  linePath,
+  areaPath,
+}: {
+  nodes: { x: number; y: number }[];
+  scraped: number | string;
+  linePath: string;
+  areaPath: string;
+}) {
+  return (
+    <div className="relative bg-[#020202] border border-white/5 rounded-xl p-3 h-48 flex items-center justify-center overflow-hidden">
+      <svg viewBox="0 0 390 190" className="w-full h-full text-white/5" fill="none">
+        <defs>
+          <linearGradient id="scopeGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(16, 185, 129, 0.3)" />
+            <stop offset="100%" stopColor="rgba(16, 185, 129, 0)" />
+          </linearGradient>
+        </defs>
+
+        {/* High Tech Grid */}
+        <line x1="20" y1="30" x2="370" y2="30" stroke="rgba(255,255,255,0.02)" strokeWidth="0.8" />
+        <line x1="20" y1="60" x2="370" y2="60" stroke="rgba(255,255,255,0.02)" strokeWidth="0.8" />
+        <line x1="20" y1="90" x2="370" y2="90" stroke="rgba(255,255,255,0.02)" strokeWidth="0.8" />
+        <line x1="20" y1="120" x2="370" y2="120" stroke="rgba(255,255,255,0.02)" strokeWidth="0.8" />
+        <line x1="20" y1="150" x2="370" y2="150" stroke="rgba(255,255,255,0.02)" strokeWidth="0.8" />
+
+        <line x1="70" y1="20" x2="70" y2="180" stroke="rgba(255,255,255,0.02)" strokeWidth="0.8" />
+        <line x1="120" y1="20" x2="120" y2="180" stroke="rgba(255,255,255,0.02)" strokeWidth="0.8" />
+        <line x1="170" y1="20" x2="170" y2="180" stroke="rgba(255,255,255,0.02)" strokeWidth="0.8" />
+        <line x1="220" y1="20" x2="220" y2="180" stroke="rgba(255,255,255,0.02)" strokeWidth="0.8" />
+        <line x1="270" y1="20" x2="270" y2="180" stroke="rgba(255,255,255,0.02)" strokeWidth="0.8" />
+        <line x1="320" y1="20" x2="320" y2="180" stroke="rgba(255,255,255,0.02)" strokeWidth="0.8" />
+
+        {/* Glowing line paths */}
+        <path
+          d={areaPath}
+          fill="url(#scopeGradient)"
+          className="transition-all duration-700 ease-in-out"
+        />
+
+        <path
+          d={linePath}
+          stroke="#10B981"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="transition-all duration-700 ease-in-out"
+          style={{ filter: "drop-shadow(0 0 6px rgba(16, 185, 129, 0.4))" }}
+        />
+
+        {/* Dynamic dots coordinates */}
+        {nodes.map((p, pIdx) => (
+          <g key={pIdx} className="transition-all duration-700 ease-in-out">
+            <circle cx={p.x} cy={p.y} r="3" fill="#FFFFFF" stroke="#10B981" strokeWidth="1.5" />
+            <circle cx={p.x} cy={p.y} r="6" stroke="#10B981" strokeWidth="0.5" fill="none" className="animate-pulse" />
+          </g>
+        ))}
+      </svg>
+
+      {/* Oscilloscope coordinates overlay */}
+      <div className="absolute top-4 left-4 font-mono text-[7px] text-emerald-400/50 space-y-0.5 pointer-events-none">
+        <div>X_REF: 120.402</div>
+        <div>Y_REF: {scraped}</div>
+        <div>SIG_PRECISION: 99.80%</div>
+      </div>
+    </div>
+  );
+});
+
+// Interactive Market Telemetry Console Component
+function MarketTelemetryConsole() {
+  const [sector, setSector] = useState<"clinics" | "gyms" | "realestate" | "saas">("clinics");
+
+  const sectorMetrics = useMemo(() => ({
+    clinics: {
+      scraped: 2450,
+      pings: "2,380/2,450 Verified",
+      rate: "97.1%",
+      nodes: [
+        { x: 20, y: 140 },
+        { x: 70, y: 95 },
+        { x: 120, y: 120 },
+        { x: 170, y: 60 },
+        { x: 220, y: 85 },
+        { x: 270, y: 35 },
+        { x: 320, y: 70 },
+        { x: 370, y: 25 }
+      ],
+      logPool: [
+        "SCRAPE: Target matching 'clinics' initialized...",
+        "Scraping nodes: Kolkata Central Division",
+        "Found 140 localized coordinates.",
+        "HLR Ping check starting...",
+        "Node 0x4B3 verified: Status OK",
+        "Node 0x2A1 verified: Status OK",
+        "Scraping batch finalized. CRM Sync active.",
+        "Pushing 132 verified nodes to client database."
+      ]
+    },
+    gyms: {
+      scraped: 1120,
+      pings: "1,090/1,120 Verified",
+      rate: "97.3%",
+      nodes: [
+        { x: 20, y: 150 },
+        { x: 70, y: 125 },
+        { x: 120, y: 80 },
+        { x: 170, y: 100 },
+        { x: 220, y: 50 },
+        { x: 270, y: 75 },
+        { x: 320, y: 45 },
+        { x: 370, y: 30 }
+      ],
+      logPool: [
+        "SCRAPE: Target matching 'fitness_centers' initialized...",
+        "Scraping nodes: East Zone Gyms Directory",
+        "Found 98 localized coordinates.",
+        "HLR Ping check starting...",
+        "Node 0x9F4 verified: Status OK",
+        "Node 0x1E5 verified: Status OK",
+        "Scraping batch finalized. CRM Sync active.",
+        "Pushing 92 verified nodes to client database."
+      ]
+    },
+    realestate: {
+      scraped: 4320,
+      pings: "4,110/4,320 Verified",
+      rate: "95.1%",
+      nodes: [
+        { x: 20, y: 160 },
+        { x: 70, y: 140 },
+        { x: 120, y: 100 },
+        { x: 170, y: 110 },
+        { x: 220, y: 75 },
+        { x: 270, y: 60 },
+        { x: 320, y: 35 },
+        { x: 370, y: 20 }
+      ],
+      logPool: [
+        "SCRAPE: Target matching 'real_estate_agents' initialized...",
+        "Scraping nodes: Premium Residential Segment",
+        "Found 220 localized coordinates.",
+        "HLR Ping check starting...",
+        "Node 0x5D2 verified: Status OK",
+        "Node 0x8C1 verified: Status OK",
+        "Scraping batch finalized. CRM Sync active.",
+        "Pushing 204 verified nodes to client database."
+      ]
+    },
+    saas: {
+      scraped: 890,
+      pings: "870/890 Verified",
+      rate: "97.7%",
+      nodes: [
+        { x: 20, y: 130 },
+        { x: 70, y: 110 },
+        { x: 120, y: 90 },
+        { x: 170, y: 80 },
+        { x: 220, y: 60 },
+        { x: 270, y: 40 },
+        { x: 320, y: 50 },
+        { x: 370, y: 15 }
+      ],
+      logPool: [
+        "SCRAPE: Target matching 'saas_tech_firms' initialized...",
+        "Scraping nodes: IT Tech Hub Registry",
+        "Found 64 localized coordinates.",
+        "HLR Ping check starting...",
+        "Node 0x7A4 verified: Status OK",
+        "Node 0x3F5 verified: Status OK",
+        "Scraping batch finalized. CRM Sync active.",
+        "Pushing 61 verified nodes to client database."
+      ]
+    }
+  }), []);
+
+  const current = sectorMetrics[sector];
+
+  const makeLinePath = useCallback((points: { x: number; y: number }[]) => {
+    return points.reduce((acc, p, i) => {
+      return i === 0 ? `M ${p.x} ${p.y}` : `${acc} L ${p.x} ${p.y}`;
+    }, "");
+  }, []);
+
+  const makeAreaPath = useCallback((points: { x: number; y: number }[]) => {
+    const linePath = makeLinePath(points);
+    return `${linePath} L 370 180 L 20 180 Z`;
+  }, [makeLinePath]);
+
+  const currentLinePath = useMemo(() => makeLinePath(current.nodes), [current.nodes, makeLinePath]);
+  const currentAreaPath = useMemo(() => makeAreaPath(current.nodes), [current.nodes, makeAreaPath]);
+
+  return (
+    <section
+      id="telemetry"
+      className="relative flex min-h-screen items-center justify-center px-6 pt-32 md:pt-40 pb-24 text-[hsl(0_0%_96%)] border-t border-white/5"
+    >
+      <div className="mx-auto max-w-6xl w-full">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <p className="mb-4 text-xs uppercase tracking-[0.4em] text-white/50">
+            Analytics Engine
+          </p>
+          <h2 className="text-4xl font-light leading-tight md:text-5xl flex flex-col items-center">
+            <WordReveal text="Market Telemetry" />{" "}
+            <span className="inline-block mt-1">
+              <MetallicText text="Console" className="text-4xl md:text-5xl font-semibold" />
+            </span>
+          </h2>
+          <p className="text-xs text-white/45 mt-4">
+            Real-time localized directory scraping and multi-channel verification maps.
+          </p>
+        </div>
+
+        {/* Console grid layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          {/* Left Panel: Controls and Stats (5 cols) */}
+          <div className="lg:col-span-5 flex flex-col gap-6">
+            <BorderLaserCard className="p-6 bg-black/40 flex flex-col justify-between h-full" borderRadius={24}>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xs uppercase tracking-widest text-white/40 font-mono mb-4">
+                    01_Select_Audit_Target
+                  </h3>
+                  
+                  {/* Selector Buttons */}
+                  <div className="grid grid-cols-2 gap-2">
+                    {(["clinics", "gyms", "realestate", "saas"] as const).map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => setSector(s)}
+                        className={`text-[10px] font-mono uppercase px-3 py-2 border text-left flex items-center justify-between transition ${
+                          sector === s
+                            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                            : "bg-white/5 text-white/50 border-white/5 hover:border-white/10"
+                        }`}
+                      >
+                        <span>{s === "realestate" ? "Real Estate" : s === "saas" ? "SaaS / Tech" : s}</span>
+                        {sector === s && <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-xs uppercase tracking-widest text-white/40 font-mono">
+                    02_Audit_KPIs
+                  </h3>
+                  
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3 font-mono">
+                      <div className="text-lg font-bold text-white tracking-tight">{current.scraped}</div>
+                      <div className="text-[7px] uppercase tracking-wider text-white/40 mt-1">Scraped Nodes</div>
+                    </div>
+                    
+                    <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3 font-mono">
+                      <div className="text-lg font-bold text-emerald-400 tracking-tight">{current.rate}</div>
+                      <div className="text-[7px] uppercase tracking-wider text-white/40 mt-1">Verify Rate</div>
+                    </div>
+
+                    <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3 font-mono">
+                      <div className="text-lg font-bold text-blue-400 tracking-tight">99.8%</div>
+                      <div className="text-[7px] uppercase tracking-wider text-white/40 mt-1">Data Precision</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Simulated Scope Scanning Vector */}
+                <div className="bg-white/[0.01] border border-white/5 rounded-xl p-4 flex items-center gap-4">
+                  <div className="relative h-12 w-12 rounded-full border border-emerald-500/30 flex items-center justify-center overflow-hidden shrink-0">
+                    <div className="absolute inset-0 border border-emerald-500/20 rounded-full animate-ping" style={{ animationDuration: '3s' }} />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/0 via-emerald-500/0 to-emerald-500/20 rounded-full animate-spin" style={{ animationDuration: '4s' }} />
+                    <Database className="h-4 w-4 text-emerald-400/80 animate-pulse" />
+                  </div>
+                  <div className="font-mono text-[9px] text-white/50 leading-relaxed">
+                    <div className="text-white/80 font-bold uppercase">HLR_SCANNING_ACTIVE</div>
+                    <div>Pinging localized registry coordinates on Vobiz VOIP gateways...</div>
+                  </div>
+                </div>
+              </div>
+            </BorderLaserCard>
+          </div>
+
+          {/* Right Panel: Interactive Oscilloscope Graph & Live logs (7 cols) */}
+          <div className="lg:col-span-7 flex flex-col gap-6">
+            <BorderLaserCard className="p-6 bg-[#070707]/90 flex flex-col gap-4" borderRadius={24}>
+              <div className="flex items-center gap-2 border-b border-white/5 pb-3 justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[9px] font-mono tracking-widest text-white/50 uppercase">TELEMETRY_DENSITY_SCOPE</span>
+                </div>
+                <span className="text-[8px] font-mono text-white/35">NODE: {sector.toUpperCase()}_MAP // GATEWAY_OK</span>
+              </div>
+
+              {/* Glowing SVG Oscilloscope Chart */}
+              <TelemetryScopeChart
+                nodes={current.nodes}
+                scraped={current.scraped}
+                linePath={currentLinePath}
+                areaPath={currentAreaPath}
+              />
+
+              {/* Real-time scrolling logs */}
+              <TelemetryLogsTerminal logPool={current.logPool} />
+            </BorderLaserCard>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function Index() {
   const scrollRootRef = useRef<HTMLDivElement | null>(null);
@@ -435,11 +786,14 @@ export default function Index() {
                     <div className="w-[8vw] shrink-0 pointer-events-none" />
 
                     {/* Vertical 1: Automation */}
-                    <div className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center gpu-accelerate ${
-                      hoveredService === 0 
-                        ? "scale-100 opacity-100 shadow-[0_0_25px_rgba(255,255,255,0.12)]" 
-                        : "scale-[0.85] opacity-40 blur-[0.3px]"
-                    }`}>
+                    <Link
+                      to="/services/automation"
+                      className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center gpu-accelerate block ${
+                        hoveredService === 0 
+                          ? "scale-100 opacity-100 shadow-[0_0_25px_rgba(255,255,255,0.12)]" 
+                          : "scale-[0.85] opacity-40 blur-[0.3px]"
+                      }`}
+                    >
                       <BorderLaserCard className="p-4 sm:p-5 flex flex-col justify-between bg-black/40 min-h-[230px] h-full animate-crt-scan" borderRadius={isMobile ? 0 : 20} duration={6}>
                         <div>
                           <div className="flex justify-between items-start mb-4">
@@ -461,14 +815,17 @@ export default function Index() {
                           <div>&gt; Syncing Razorpays webhooks... OK</div>
                         </div>
                       </BorderLaserCard>
-                    </div>
+                    </Link>
 
                     {/* Vertical 2: Web Dev */}
-                    <div className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center gpu-accelerate ${
-                      hoveredService === 1 
-                        ? "scale-100 opacity-100 shadow-[0_0_25px_rgba(255,255,255,0.12)]" 
-                        : "scale-[0.85] opacity-40 blur-[0.3px]"
-                    }`}>
+                    <Link
+                      to="/services/web-dev"
+                      className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center gpu-accelerate block ${
+                        hoveredService === 1 
+                          ? "scale-100 opacity-100 shadow-[0_0_25px_rgba(255,255,255,0.12)]" 
+                          : "scale-[0.85] opacity-40 blur-[0.3px]"
+                      }`}
+                    >
                       <BorderLaserCard className="p-4 sm:p-5 flex flex-col justify-between bg-black/40 min-h-[230px] h-full animate-crt-scan" borderRadius={isMobile ? 0 : 20} duration={7}>
                         <div>
                           <div className="flex justify-between items-start mb-4">
@@ -495,14 +852,17 @@ export default function Index() {
                           </div>
                         </div>
                       </BorderLaserCard>
-                    </div>
+                    </Link>
 
                     {/* Vertical 3: Filmmaking */}
-                    <div className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center gpu-accelerate ${
-                      hoveredService === 2 
-                        ? "scale-100 opacity-100 shadow-[0_0_25px_rgba(255,255,255,0.12)]" 
-                        : "scale-[0.85] opacity-40 blur-[0.3px]"
-                    }`}>
+                    <Link
+                      to="/services/filmmaking"
+                      className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center gpu-accelerate block ${
+                        hoveredService === 2 
+                          ? "scale-100 opacity-100 shadow-[0_0_25px_rgba(255,255,255,0.12)]" 
+                          : "scale-[0.85] opacity-40 blur-[0.3px]"
+                      }`}
+                    >
                       <BorderLaserCard className="p-4 sm:p-5 flex flex-col justify-between bg-black/40 min-h-[230px] h-full animate-crt-scan" borderRadius={isMobile ? 0 : 20} duration={5}>
                         <div>
                           <div className="flex justify-between items-start mb-4">
@@ -524,14 +884,17 @@ export default function Index() {
                           <span>60_FPS // 4K</span>
                         </div>
                       </BorderLaserCard>
-                    </div>
+                    </Link>
 
                     {/* Vertical 4: Consulting */}
-                    <div className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center gpu-accelerate ${
-                      hoveredService === 3 
-                        ? "scale-100 opacity-100 shadow-[0_0_25px_rgba(255,255,255,0.12)]" 
-                        : "scale-[0.85] opacity-40 blur-[0.3px]"
-                    }`}>
+                    <Link
+                      to="/services/consulting"
+                      className={`w-[84vw] shrink-0 snap-center transition-all duration-500 ease-out origin-center gpu-accelerate block ${
+                        hoveredService === 3 
+                          ? "scale-100 opacity-100 shadow-[0_0_25px_rgba(255,255,255,0.12)]" 
+                          : "scale-[0.85] opacity-40 blur-[0.3px]"
+                      }`}
+                    >
                       <BorderLaserCard className="p-4 sm:p-5 flex flex-col justify-between bg-black/40 min-h-[230px] h-full animate-crt-scan" borderRadius={isMobile ? 0 : 20} duration={8}>
                         <div>
                           <div className="flex justify-between items-start mb-4">
@@ -553,7 +916,7 @@ export default function Index() {
                           <span className="text-emerald-400 font-bold font-mono">4.2x (VERIFIED)</span>
                         </div>
                       </BorderLaserCard>
-                    </div>
+                    </Link>
 
                     {/* Right spacer to center last card */}
                     <div className="w-[8vw] shrink-0 pointer-events-none" />
@@ -581,7 +944,7 @@ export default function Index() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
                 {/* Vertical 1: Automation */}
-                <div onMouseEnter={() => setHoveredService(0)} className="w-full h-full">
+                <Link to="/services/automation" onMouseEnter={() => setHoveredService(0)} className="w-full h-full block cursor-pointer">
                   <BorderLaserCard className="p-6 flex flex-col justify-between bg-black/40 min-h-[220px] h-full" borderRadius={20} duration={6}>
                     <div>
                       <div className="flex justify-between items-start mb-4">
@@ -603,10 +966,10 @@ export default function Index() {
                       <div>&gt; Syncing Razorpays webhooks... OK</div>
                     </div>
                   </BorderLaserCard>
-                </div>
+                </Link>
 
                 {/* Vertical 2: Web Dev */}
-                <div onMouseEnter={() => setHoveredService(1)} className="w-full h-full">
+                <Link to="/services/web-dev" onMouseEnter={() => setHoveredService(1)} className="w-full h-full block cursor-pointer">
                   <BorderLaserCard className="p-6 flex flex-col justify-between bg-black/40 min-h-[220px] h-full" borderRadius={20} duration={7}>
                     <div>
                       <div className="flex justify-between items-start mb-4">
@@ -633,10 +996,10 @@ export default function Index() {
                       </div>
                     </div>
                   </BorderLaserCard>
-                </div>
+                </Link>
 
                 {/* Vertical 3: Filmmaking */}
-                <div onMouseEnter={() => setHoveredService(2)} className="w-full h-full">
+                <Link to="/services/filmmaking" onMouseEnter={() => setHoveredService(2)} className="w-full h-full block cursor-pointer">
                   <BorderLaserCard className="p-6 flex flex-col justify-between bg-black/40 min-h-[220px] h-full" borderRadius={20} duration={5}>
                     <div>
                       <div className="flex justify-between items-start mb-4">
@@ -658,10 +1021,10 @@ export default function Index() {
                       <span>60_FPS // 4K</span>
                     </div>
                   </BorderLaserCard>
-                </div>
+                </Link>
 
                 {/* Vertical 4: Consulting */}
-                <div onMouseEnter={() => setHoveredService(3)} className="w-full h-full">
+                <Link to="/services/consulting" onMouseEnter={() => setHoveredService(3)} className="w-full h-full block cursor-pointer">
                   <BorderLaserCard className="p-6 flex flex-col justify-between bg-black/40 min-h-[220px] h-full" borderRadius={20} duration={8}>
                     <div>
                       <div className="flex justify-between items-start mb-4">
@@ -683,7 +1046,7 @@ export default function Index() {
                       <span className="text-emerald-400 font-bold font-mono">4.2x (VERIFIED)</span>
                     </div>
                   </BorderLaserCard>
-                </div>
+                </Link>
               </div>
             )}
           </div>
@@ -831,6 +1194,9 @@ export default function Index() {
             </div>
           </div>
         </section>
+
+        {/* NEW SECTION: Market Telemetry Console */}
+        <MarketTelemetryConsole />
 
         {/* REDESIGNED: Glassmorphic About Bento Row */}
         <section

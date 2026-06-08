@@ -12,6 +12,7 @@ const SERVICES = [
 const COMPANY = [
   { label: "Home", to: "/" },
   { label: "Work / Case Studies", to: "/work" },
+  { label: "Our Clients", to: "/clients" },
   { label: "Process", to: "/process" },
   { label: "About", to: "/about" },
   { label: "Pricing", to: "/pricing" },

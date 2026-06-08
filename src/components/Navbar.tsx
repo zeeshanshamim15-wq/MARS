@@ -10,6 +10,7 @@ type NavItem = { label: string; to: string };
 const LEFT_ITEMS: NavItem[] = [
   { label: "Home", to: "/" },
   { label: "Services", to: "/services" },
+  { label: "Clients", to: "/clients" },
   { label: "Pricing", to: "/pricing" },
   { label: "Logs", to: "/logs" },
 ];

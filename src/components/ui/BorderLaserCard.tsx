@@ -17,14 +17,22 @@ export default function BorderLaserCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const laserRef = useRef<SVGRectElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [isMobile, setIsMobile] = useState(false);
   const uniqueId = useId();
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     const el = cardRef.current;
     if (!el) return;
 
     const observer = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         const target = entry.target as HTMLElement;
         setDimensions({
           width: target.offsetWidth,
@@ -122,8 +130,9 @@ export default function BorderLaserCard({
             rx={borderRadius}
             fill="none"
             stroke={`url(#${gradientId})`}
-            strokeWidth="1.5"
-            filter={`url(#${glowId})`}
+            strokeWidth={isMobile ? "1.2" : "1.5"}
+            filter={isMobile ? undefined : `url(#${glowId})`}
+            style={{ willChange: "stroke-dashoffset, stroke-dasharray" }}
           />
         </svg>
       )}
