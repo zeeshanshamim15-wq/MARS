@@ -454,7 +454,7 @@ export default function ScrollVideo() {
       scrollTrigger: {
         trigger: section,
         start: "top top",
-        end: "+=1300%",
+        end: "+=400%",
         pin: true,
         scrub: 0.8,
         fastScrollEnd: true,

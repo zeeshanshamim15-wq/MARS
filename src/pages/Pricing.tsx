@@ -109,6 +109,20 @@ const INTERACTION_COSTS = [
 
 export default function Pricing() {
   const [isMobile, setIsMobile] = useState(false);
+  const [activePlan, setActivePlan] = useState(0);
+  const [activeAddon, setActiveAddon] = useState(0);
+
+  const handlePlanScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const container = e.currentTarget;
+    const index = Math.min(3, Math.max(0, Math.round(container.scrollLeft / (container.scrollWidth / 4))));
+    setActivePlan(index);
+  };
+
+  const handleAddonScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const container = e.currentTarget;
+    const index = Math.min(1, Math.max(0, Math.round(container.scrollLeft / (container.scrollWidth / 2))));
+    setActiveAddon(index);
+  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -156,58 +170,143 @@ export default function Pricing() {
         </div>
 
         {/* Pricing Tiers Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-          {PLANS.map((plan, index) => (
-            <BorderLaserCard
-              key={index}
-              className={`p-5 sm:p-6 flex flex-col justify-between h-full relative ${
-                plan.isPopular ? "shadow-emerald-500/5 shadow-xl" : ""
-              }`}
-              borderRadius={isMobile ? 0 : 24}
+        {isMobile ? (
+          <div className="w-full overflow-hidden py-4 select-none mb-20">
+            <style dangerouslySetInnerHTML={{__html: `
+              .no-scrollbar::-webkit-scrollbar {
+                display: none;
+              }
+            `}} />
+            <div 
+              onScroll={handlePlanScroll}
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-6 w-[calc(100%+3rem)] -mx-6 px-6 no-scrollbar"
+              style={{
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+              }}
             >
-              {plan.isPopular && (
-                <span className="absolute -top-3 right-6 bg-emerald-500 text-black text-[9px] uppercase tracking-widest font-semibold px-3 py-1 rounded-none z-20">
-                  Beachhead Choice
-                </span>
-              )}
-              <div>
-                <h4 className="text-white font-medium text-lg mb-2">{plan.name}</h4>
-                <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-2xl font-semibold text-white">{plan.price}</span>
-                  <span className="text-xs text-white/40">{plan.period}</span>
-                </div>
-                <p className="text-[10px] font-semibold text-emerald-400/90 tracking-wide uppercase mb-4">{plan.credits}</p>
-                <p className="text-xs text-white/50 leading-relaxed mb-6 border-b border-white/5 pb-4">{plan.description}</p>
+              <div className="w-[4vw] shrink-0 pointer-events-none" />
+              {PLANS.map((plan, index) => (
+                <div key={index} className="w-[82vw] shrink-0 snap-center">
+                  <BorderLaserCard
+                    key={index}
+                    className={`p-5 sm:p-6 flex flex-col justify-between h-full relative ${
+                      plan.isPopular ? "shadow-emerald-500/5 shadow-xl" : ""
+                    }`}
+                    borderRadius={0}
+                  >
+                    {plan.isPopular && (
+                      <span className="absolute -top-3 right-6 bg-emerald-500 text-black text-[9px] uppercase tracking-widest font-semibold px-3 py-1 rounded-none z-20">
+                        Beachhead Choice
+                      </span>
+                    )}
+                    <div>
+                      <h4 className="text-white font-medium text-lg mb-2">{plan.name}</h4>
+                      <div className="flex items-baseline gap-1 mb-2">
+                        <span className="text-2xl font-semibold text-white">{plan.price}</span>
+                        <span className="text-xs text-white/40">{plan.period}</span>
+                      </div>
+                      <p className="text-[10px] font-semibold text-emerald-400/90 tracking-wide uppercase mb-4">{plan.credits}</p>
+                      <p className="text-xs text-white/50 leading-relaxed mb-6 border-b border-white/5 pb-4">{plan.description}</p>
 
-                {/* Features */}
-                <div className="space-y-2 mb-6">
-                  {plan.features.map((feat, fIdx) => (
-                    <div key={fIdx} className="flex items-start gap-2 text-xs text-white/70">
-                      <Check className="h-3.5 w-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                      <span>{feat}</span>
+                      {/* Features */}
+                      <div className="space-y-2 mb-6">
+                        {plan.features.map((feat, fIdx) => (
+                          <div key={fIdx} className="flex items-start gap-2 text-xs text-white/70">
+                            <Check className="h-3.5 w-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                            <span>{feat}</span>
+                          </div>
+                        ))}
+                        {plan.paywalled && plan.paywalled.map((feat, fIdx) => (
+                          <div key={fIdx} className="flex items-start gap-2 text-xs text-white/30 line-through">
+                            <span className="h-1.5 w-1.5 rounded-full bg-white/20 shrink-0 mt-1.5" />
+                            <span>{feat}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  ))}
-                  {plan.paywalled && plan.paywalled.map((feat, fIdx) => (
-                    <div key={fIdx} className="flex items-start gap-2 text-xs text-white/30 line-through">
-                      <span className="h-1.5 w-1.5 rounded-full bg-white/20 shrink-0 mt-1.5" />
-                      <span>{feat}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
-              <button
-                className={`w-full py-2.5 rounded-none md:rounded-xl text-xs font-semibold transition z-20 relative ${
-                  plan.isPopular
-                    ? "bg-white text-black hover:scale-[1.02]"
-                    : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
+                    <button
+                      className={`w-full py-2.5 rounded-none text-xs font-semibold transition z-20 relative ${
+                        plan.isPopular
+                          ? "bg-white text-black hover:scale-[1.02]"
+                          : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
+                      }`}
+                    >
+                      {plan.cta}
+                    </button>
+                  </BorderLaserCard>
+                </div>
+              ))}
+            </div>
+            {/* Pagination Indicators */}
+            <div className="flex justify-center gap-2 mt-2 select-none">
+              {[0, 1, 2, 3].map((index) => (
+                <div
+                  key={index}
+                  className={`h-1 rounded-none transition-all duration-300 ${
+                    activePlan === index
+                      ? "w-6 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                      : "w-2.5 bg-white/20"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+            {PLANS.map((plan, index) => (
+              <BorderLaserCard
+                key={index}
+                className={`p-5 sm:p-6 flex flex-col justify-between h-full relative ${
+                  plan.isPopular ? "shadow-emerald-500/5 shadow-xl" : ""
                 }`}
+                borderRadius={isMobile ? 0 : 24}
               >
-                {plan.cta}
-              </button>
-            </BorderLaserCard>
-          ))}
-        </div>
+                {plan.isPopular && (
+                  <span className="absolute -top-3 right-6 bg-emerald-500 text-black text-[9px] uppercase tracking-widest font-semibold px-3 py-1 rounded-none z-20">
+                    Beachhead Choice
+                  </span>
+                )}
+                <div>
+                  <h4 className="text-white font-medium text-lg mb-2">{plan.name}</h4>
+                  <div className="flex items-baseline gap-1 mb-2">
+                    <span className="text-2xl font-semibold text-white">{plan.price}</span>
+                    <span className="text-xs text-white/40">{plan.period}</span>
+                  </div>
+                  <p className="text-[10px] font-semibold text-emerald-400/90 tracking-wide uppercase mb-4">{plan.credits}</p>
+                  <p className="text-xs text-white/50 leading-relaxed mb-6 border-b border-white/5 pb-4">{plan.description}</p>
+
+                  {/* Features */}
+                  <div className="space-y-2 mb-6">
+                    {plan.features.map((feat, fIdx) => (
+                      <div key={fIdx} className="flex items-start gap-2 text-xs text-white/70">
+                        <Check className="h-3.5 w-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                        <span>{feat}</span>
+                      </div>
+                    ))}
+                    {plan.paywalled && plan.paywalled.map((feat, fIdx) => (
+                      <div key={fIdx} className="flex items-start gap-2 text-xs text-white/30 line-through">
+                        <span className="h-1.5 w-1.5 rounded-full bg-white/20 shrink-0 mt-1.5" />
+                        <span>{feat}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  className={`w-full py-2.5 rounded-none md:rounded-xl text-xs font-semibold transition z-20 relative ${
+                    plan.isPopular
+                      ? "bg-white text-black hover:scale-[1.02]"
+                      : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
+                  }`}
+                >
+                  {plan.cta}
+                </button>
+              </BorderLaserCard>
+            ))}
+          </div>
+        )}
 
         {/* Add-ons & Bundles */}
         <div className="mb-24">
@@ -216,18 +315,64 @@ export default function Pricing() {
               Add-ons & Team <span className="font-semibold">Bundles</span>
             </h3>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {ADDONS.map((ao, idx) => (
-              <div key={idx} className="mars-glass-card rounded-none md:rounded-[24px] p-6 border border-white/5 bg-white/[0.01]">
-                <div className="flex justify-between items-baseline mb-3">
-                  <h4 className="text-white font-medium text-sm">{ao.name}</h4>
-                  <span className="text-emerald-400 font-semibold text-xs shrink-0">{ao.price}</span>
-                </div>
-                <p className="text-[10px] text-white/40 font-semibold mb-3 uppercase tracking-wider">{ao.credits} included</p>
-                <p className="text-xs text-white/50 leading-relaxed">{ao.desc}</p>
+          {isMobile ? (
+            <div className="w-full overflow-hidden py-4 select-none">
+              <style dangerouslySetInnerHTML={{__html: `
+                .no-scrollbar::-webkit-scrollbar {
+                  display: none;
+                }
+              `}} />
+              <div 
+                onScroll={handleAddonScroll}
+                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-6 w-[calc(100%+3rem)] -mx-6 px-6 no-scrollbar"
+                style={{
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                }}
+              >
+                <div className="w-[4vw] shrink-0 pointer-events-none" />
+                {ADDONS.map((ao, idx) => (
+                  <div
+                    key={idx}
+                    className="w-[82vw] shrink-0 snap-center mars-glass-card rounded-none p-6 border border-white/5 bg-white/[0.01]"
+                  >
+                    <div className="flex justify-between items-baseline mb-3">
+                      <h4 className="text-white font-medium text-sm">{ao.name}</h4>
+                      <span className="text-emerald-400 font-semibold text-xs shrink-0">{ao.price}</span>
+                    </div>
+                    <p className="text-[10px] text-white/40 font-semibold mb-3 uppercase tracking-wider">{ao.credits} included</p>
+                    <p className="text-xs text-white/50 leading-relaxed">{ao.desc}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+              {/* Pagination Indicators */}
+              <div className="flex justify-center gap-2 mt-2 select-none">
+                {[0, 1].map((index) => (
+                  <div
+                    key={index}
+                    className={`h-1 rounded-none transition-all duration-300 ${
+                      activeAddon === index
+                        ? "w-6 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                        : "w-2.5 bg-white/20"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              {ADDONS.map((ao, idx) => (
+                <div key={idx} className="mars-glass-card rounded-none md:rounded-[24px] p-6 border border-white/5 bg-white/[0.01]">
+                  <div className="flex justify-between items-baseline mb-3">
+                    <h4 className="text-white font-medium text-sm">{ao.name}</h4>
+                    <span className="text-emerald-400 font-semibold text-xs shrink-0">{ao.price}</span>
+                  </div>
+                  <p className="text-[10px] text-white/40 font-semibold mb-3 uppercase tracking-wider">{ao.credits} included</p>
+                  <p className="text-xs text-white/50 leading-relaxed">{ao.desc}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Credit Economics / Token Costs */}

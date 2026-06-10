@@ -6,7 +6,22 @@
     <title>MARS — Intelligence, automated.</title>
     <meta name="description" content="MARS — premium AI, automation, and consulting for forward-thinking teams." />
     <meta name="author" content="MARS" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" id="favicon" href="/favicon-dark.png" />
+    <script>
+      (function() {
+        const favicon = document.getElementById('favicon');
+        const updateFavicon = (e) => {
+          if (e.matches) {
+            favicon.href = '/favicon-dark.png';
+          } else {
+            favicon.href = '/favicon-light.png';
+          }
+        };
+        const matcher = window.matchMedia('(prefers-color-scheme: dark)');
+        matcher.addEventListener('change', updateFavicon);
+        updateFavicon(matcher);
+      })();
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

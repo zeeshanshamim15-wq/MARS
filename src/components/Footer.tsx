@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import marsLogo from "@/assets/mars-logo.png";
 
 const SERVICES = [
-  { label: "Digital Marketing", to: "/services" },
-  { label: "AI Automation", to: "/services" },
-  { label: "AI Filmmaking", to: "/services" },
-  { label: "Consulting", to: "/services" },
+  { label: "Digital Marketing", to: "/services/web-dev" },
+  { label: "AI Automation", to: "/services/automation" },
+  { label: "AI Filmmaking", to: "/services/filmmaking" },
+  { label: "Consulting", to: "/services/consulting" },
 ];
 
 const COMPANY = [

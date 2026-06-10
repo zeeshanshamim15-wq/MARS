@@ -35,6 +35,14 @@ function ClientLogoIcon({ name }: { name: string }) {
 
 export default function Clients() {
   const [isMobile, setIsMobile] = useState(false);
+  const [activeClient, setActiveClient] = useState(0);
+
+  const handleClientScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const container = e.currentTarget;
+    const total = CLIENTS_DATA.length;
+    const index = Math.min(total - 1, Math.max(0, Math.round(container.scrollLeft / (container.scrollWidth / total))));
+    setActiveClient(index);
+  };
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -66,36 +74,98 @@ export default function Clients() {
         </div>
 
         {/* Clients Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mb-32">
-          {CLIENTS_DATA.map((client, idx) => (
-            <Link 
-              key={client.id}
-              to={`/clients/${client.id}`}
-              className="block group cursor-pointer transition duration-300 hover:scale-[1.02] hover:-translate-y-1"
+        {isMobile ? (
+          <div className="w-full overflow-hidden py-4 select-none mb-32">
+            <style dangerouslySetInnerHTML={{__html: `
+              .no-scrollbar::-webkit-scrollbar {
+                display: none;
+              }
+            `}} />
+            <div 
+              onScroll={handleClientScroll}
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-6 w-[calc(100%+3rem)] -mx-6 px-6 no-scrollbar"
+              style={{
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+              }}
             >
-              <BorderLaserCard 
-                className="p-6 flex flex-col items-center justify-center text-center h-full min-h-[220px] bg-black/40 backdrop-blur-xl border border-white/5 animate-crt-scan group-hover:border-emerald-500/30" 
-                borderRadius={isMobile ? 0 : 20}
-                duration={6 + (idx % 3)}
-              >
-                {/* Logo box */}
-                <div className="h-14 w-14 rounded-full bg-white/5 border border-white/10 group-hover:border-emerald-500/40 group-hover:bg-emerald-500/5 flex items-center justify-center transition-all duration-300 mb-4 shadow-[0_0_15px_rgba(255,255,255,0.02)]">
-                  <ClientLogoIcon name={client.dummyLogo} />
+              <div className="w-[4vw] shrink-0 pointer-events-none" />
+              {CLIENTS_DATA.map((client, idx) => (
+                <div key={client.id} className="w-[82vw] shrink-0 snap-center">
+                  <Link 
+                    to={`/clients/${client.id}`}
+                    className="block group cursor-pointer transition duration-300"
+                  >
+                    <BorderLaserCard 
+                      className="p-6 flex flex-col items-center justify-center text-center h-full min-h-[220px] bg-black/40 backdrop-blur-xl border border-white/5 animate-crt-scan" 
+                      borderRadius={0}
+                      duration={6 + (idx % 3)}
+                    >
+                      {/* Logo box */}
+                      <div className="h-14 w-14 rounded-full bg-white/5 border border-white/10 group-hover:border-emerald-500/40 group-hover:bg-emerald-500/5 flex items-center justify-center transition-all duration-300 mb-4 shadow-[0_0_15px_rgba(255,255,255,0.02)]">
+                        <ClientLogoIcon name={client.dummyLogo} />
+                      </div>
+
+                      {/* Client Name */}
+                      <h3 className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors duration-300 mb-3">
+                        {client.clientName}
+                      </h3>
+
+                      {/* Delivered Metric Badge */}
+                      <span className="text-[8.5px] font-mono uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full font-semibold mt-auto">
+                        {client.deliveredMetric}
+                      </span>
+                    </BorderLaserCard>
+                  </Link>
                 </div>
+              ))}
+            </div>
+            {/* Pagination Indicators */}
+            <div className="flex justify-center gap-2 mt-2 select-none">
+              {CLIENTS_DATA.map((_, index) => (
+                <div
+                  key={index}
+                  className={`h-1 rounded-none transition-all duration-300 ${
+                    activeClient === index
+                      ? "w-6 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                      : "w-2.5 bg-white/20"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mb-32">
+            {CLIENTS_DATA.map((client, idx) => (
+              <Link 
+                key={client.id}
+                to={`/clients/${client.id}`}
+                className="block group cursor-pointer transition duration-300 hover:scale-[1.02] hover:-translate-y-1"
+              >
+                <BorderLaserCard 
+                  className="p-6 flex flex-col items-center justify-center text-center h-full min-h-[220px] bg-black/40 backdrop-blur-xl border border-white/5 animate-crt-scan group-hover:border-emerald-500/30" 
+                  borderRadius={isMobile ? 0 : 20}
+                  duration={6 + (idx % 3)}
+                >
+                  {/* Logo box */}
+                  <div className="h-14 w-14 rounded-full bg-white/5 border border-white/10 group-hover:border-emerald-500/40 group-hover:bg-emerald-500/5 flex items-center justify-center transition-all duration-300 mb-4 shadow-[0_0_15px_rgba(255,255,255,0.02)]">
+                    <ClientLogoIcon name={client.dummyLogo} />
+                  </div>
 
-                {/* Client Name */}
-                <h3 className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors duration-300 mb-3">
-                  {client.clientName}
-                </h3>
+                  {/* Client Name */}
+                  <h3 className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors duration-300 mb-3">
+                    {client.clientName}
+                  </h3>
 
-                {/* Delivered Metric Badge */}
-                <span className="text-[8.5px] font-mono uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full font-semibold mt-auto">
-                  {client.deliveredMetric}
-                </span>
-              </BorderLaserCard>
-            </Link>
-          ))}
-        </div>
+                  {/* Delivered Metric Badge */}
+                  <span className="text-[8.5px] font-mono uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full font-semibold mt-auto">
+                    {client.deliveredMetric}
+                  </span>
+                </BorderLaserCard>
+              </Link>
+            ))}
+          </div>
+        )}
 
         {/* Global Network Live Statistics */}
         <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-12 items-center bg-white/[0.02] border border-white/5 rounded-[32px] p-8 md:p-12 backdrop-blur-md">

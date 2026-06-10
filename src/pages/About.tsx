@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParallaxBackground from "@/components/ParallaxBackground";
@@ -92,6 +93,29 @@ const INDUSTRIES = [
 ];
 
 export default function About() {
+  const [isMobile, setIsMobile] = useState(false);
+  const [activeCoreValue, setActiveCoreValue] = useState(0);
+  const [activeTeam, setActiveTeam] = useState(0);
+
+  const handleCoreValueScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const container = e.currentTarget;
+    const index = Math.min(5, Math.max(0, Math.round(container.scrollLeft / (container.scrollWidth / 6))));
+    setActiveCoreValue(index);
+  };
+
+  const handleTeamScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const container = e.currentTarget;
+    const index = Math.min(7, Math.max(0, Math.round(container.scrollLeft / (container.scrollWidth / 8))));
+    setActiveTeam(index);
+  };
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
     <div className="relative isolate min-h-screen overflow-x-hidden bg-[hsl(210_24%_5%)] text-foreground">
       <ParallaxBackground src="/nebula.jpg" />
@@ -147,27 +171,72 @@ export default function About() {
             </h3>
             <p className="text-xs text-white/40 uppercase tracking-[0.2em] mt-2">The rules we live by</p>
           </div>
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {CORE_VALUES.map((value, i) => (
-              <motion.div
-                key={i}
-                variants={cardVariants}
-                className="mars-glass-card rounded-none md:rounded-2xl p-5 sm:p-6 border border-white/5 bg-white/[0.01]"
+          {isMobile ? (
+            <div className="w-full overflow-hidden py-4 select-none">
+              <style dangerouslySetInnerHTML={{__html: `
+                .no-scrollbar::-webkit-scrollbar {
+                  display: none;
+                }
+              `}} />
+              <div 
+                onScroll={handleCoreValueScroll}
+                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-6 w-[calc(100%+3rem)] -mx-6 px-6 no-scrollbar"
+                style={{
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                }}
               >
-                <div className="h-8 w-8 rounded-none md:rounded-lg bg-white/5 border border-white/10 flex items-center justify-center mb-4 text-xs font-semibold text-white/80">
-                  {String(i + 1).padStart(2, "0")}
-                </div>
-                <h4 className="text-white font-medium mb-2">{value.title}</h4>
-                <p className="text-xs leading-relaxed text-white/55">{value.description}</p>
-              </motion.div>
-            ))}
-          </motion.div>
+                <div className="w-[4vw] shrink-0 pointer-events-none" />
+                {CORE_VALUES.map((value, i) => (
+                  <div
+                    key={i}
+                    className="w-[82vw] shrink-0 snap-center mars-glass-card rounded-none p-5 sm:p-6 border border-white/5 bg-white/[0.01]"
+                  >
+                    <div className="h-8 w-8 rounded-none bg-white/5 border border-white/10 flex items-center justify-center mb-4 text-xs font-semibold text-white/80">
+                      {String(i + 1).padStart(2, "0")}
+                    </div>
+                    <h4 className="text-white font-medium mb-2">{value.title}</h4>
+                    <p className="text-xs leading-relaxed text-white/55">{value.description}</p>
+                  </div>
+                ))}
+              </div>
+              {/* Pagination Indicators */}
+              <div className="flex justify-center gap-2 mt-2 select-none">
+                {[0, 1, 2, 3, 4, 5].map((index) => (
+                  <div
+                    key={index}
+                    className={`h-1 rounded-none transition-all duration-300 ${
+                      activeCoreValue === index
+                        ? "w-6 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                        : "w-2.5 bg-white/20"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.1 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {CORE_VALUES.map((value, i) => (
+                <motion.div
+                  key={i}
+                  variants={cardVariants}
+                  className="mars-glass-card rounded-none md:rounded-2xl p-5 sm:p-6 border border-white/5 bg-white/[0.01]"
+                >
+                  <div className="h-8 w-8 rounded-none md:rounded-lg bg-white/5 border border-white/10 flex items-center justify-center mb-4 text-xs font-semibold text-white/80">
+                    {String(i + 1).padStart(2, "0")}
+                  </div>
+                  <h4 className="text-white font-medium mb-2">{value.title}</h4>
+                  <p className="text-xs leading-relaxed text-white/55">{value.description}</p>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
         </div>
 
         {/* Team Org Structure */}
@@ -179,27 +248,72 @@ export default function About() {
             </h3>
             <p className="text-xs text-white/40 uppercase tracking-[0.2em] mt-2">The architecture of our execution engine</p>
           </div>
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {TEAM_STRUCTURE.map((member, i) => (
-              <motion.div
-                key={i}
-                variants={cardVariants}
-                className="mars-glass-card rounded-none md:rounded-2xl p-5 sm:p-6 flex flex-col justify-between border border-white/5 bg-white/[0.01]"
+          {isMobile ? (
+            <div className="w-full overflow-hidden py-4 select-none">
+              <style dangerouslySetInnerHTML={{__html: `
+                .no-scrollbar::-webkit-scrollbar {
+                  display: none;
+                }
+              `}} />
+              <div 
+                onScroll={handleTeamScroll}
+                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-6 w-[calc(100%+3rem)] -mx-6 px-6 no-scrollbar"
+                style={{
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                }}
               >
-                <div>
-                  <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">{member.role}</p>
-                  <h4 className="text-sm font-semibold text-white mb-3">{member.name}</h4>
-                  <p className="text-xs text-white/50 leading-relaxed">{member.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+                <div className="w-[4vw] shrink-0 pointer-events-none" />
+                {TEAM_STRUCTURE.map((member, i) => (
+                  <div
+                    key={i}
+                    className="w-[82vw] shrink-0 snap-center mars-glass-card rounded-none p-5 sm:p-6 flex flex-col justify-between border border-white/5 bg-white/[0.01]"
+                  >
+                    <div>
+                      <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">{member.role}</p>
+                      <h4 className="text-sm font-semibold text-white mb-3">{member.name}</h4>
+                      <p className="text-xs text-white/50 leading-relaxed">{member.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Pagination Indicators */}
+              <div className="flex justify-center gap-2 mt-2 select-none">
+                {[0, 1, 2, 3, 4, 5, 6, 7].map((index) => (
+                  <div
+                    key={index}
+                    className={`h-1 rounded-none transition-all duration-300 ${
+                      activeTeam === index
+                        ? "w-6 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                        : "w-2.5 bg-white/20"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.1 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            >
+              {TEAM_STRUCTURE.map((member, i) => (
+                <motion.div
+                  key={i}
+                  variants={cardVariants}
+                  className="mars-glass-card rounded-none md:rounded-2xl p-5 sm:p-6 flex flex-col justify-between border border-white/5 bg-white/[0.01]"
+                >
+                  <div>
+                    <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">{member.role}</p>
+                    <h4 className="text-sm font-semibold text-white mb-3">{member.name}</h4>
+                    <p className="text-xs text-white/50 leading-relaxed">{member.description}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
         </div>
 
         {/* Target Industries */}

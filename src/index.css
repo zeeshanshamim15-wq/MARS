@@ -496,7 +496,68 @@
   backface-visibility: hidden;
 }
 
+/* Geist-Style Blueprint Grid Background with Radial Mask */
+.premium-blueprint-grid {
+  position: relative;
+}
 
+.premium-blueprint-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: center center;
+  mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+  opacity: 1;
+}
+
+/* Hardware-Accelerated Magnetic Buttons */
+.magnetic-btn {
+  will-change: transform;
+  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Tabular Numerals Font Utility */
+.tnum, .tabular-nums {
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* Fade-In animation */
+.animate-fade-in {
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Global Cursor Overrides — Replace I-beam text selector with default arrow */
+html, body, h1, h2, h3, h4, h5, h6, p, span, li, label, blockquote, div {
+  cursor: default;
+}
+
+/* Retain pointer hands for clickable elements */
+a, button, [role="button"], select, option, input[type="button"], input[type="submit"], .magnetic-btn, .cursor-pointer {
+  cursor: pointer !important;
+}
+
+/* Retain text I-beam only for actual text fields for editing */
+input[type="text"], input[type="email"], input[type="tel"], input[type="password"], input[type="search"], textarea, [contenteditable="true"] {
+  cursor: text !important;
+}
 
 
 
