@@ -18,16 +18,36 @@ export default function ParallaxBackground({ src = "/nebula.jpg" }: { src?: stri
   const current = useRef({ x: 0, y: 0 });
   const rafId = useRef(0);
 
+  const isAnimating = useRef(false);
+
   const animate = useCallback(() => {
-    current.current.x += (target.current.x - current.current.x) * EASE;
-    current.current.y += (target.current.y - current.current.y) * EASE;
+    const dx = target.current.x - current.current.x;
+    const dy = target.current.y - current.current.y;
 
-    if (imgRef.current) {
-      imgRef.current.style.transform = `translate3d(${current.current.x}px, ${current.current.y}px, 0) scale(1.08)`;
+    if (Math.abs(dx) > 0.01 || Math.abs(dy) > 0.01) {
+      current.current.x += dx * EASE;
+      current.current.y += dy * EASE;
+
+      if (imgRef.current) {
+        imgRef.current.style.transform = `translate3d(${current.current.x}px, ${current.current.y}px, 0) scale(1.08)`;
+      }
+      rafId.current = requestAnimationFrame(animate);
+    } else {
+      current.current.x = target.current.x;
+      current.current.y = target.current.y;
+      if (imgRef.current) {
+        imgRef.current.style.transform = `translate3d(${current.current.x}px, ${current.current.y}px, 0) scale(1.08)`;
+      }
+      isAnimating.current = false;
     }
-
-    rafId.current = requestAnimationFrame(animate);
   }, []);
+
+  const triggerAnimation = useCallback(() => {
+    if (!isAnimating.current) {
+      isAnimating.current = true;
+      rafId.current = requestAnimationFrame(animate);
+    }
+  }, [animate]);
 
   useEffect(() => {
     // Desktop mousemove listener
@@ -42,6 +62,7 @@ export default function ParallaxBackground({ src = "/nebula.jpg" }: { src?: stri
       /* move opposite to cursor direction */
       target.current.x = -nx * PARALLAX_STRENGTH;
       target.current.y = -ny * PARALLAX_STRENGTH;
+      triggerAnimation();
     };
 
     window.addEventListener("pointermove", handleMove, { passive: true });
@@ -75,6 +96,7 @@ export default function ParallaxBackground({ src = "/nebula.jpg" }: { src?: stri
       // Update target positions for smooth LERP interpolation
       target.current.x = -nx * PARALLAX_STRENGTH;
       target.current.y = -ny * PARALLAX_STRENGTH;
+      triggerAnimation();
     };
 
     let gyroActive = false;
@@ -127,14 +149,16 @@ export default function ParallaxBackground({ src = "/nebula.jpg" }: { src?: stri
     };
 
     const unbindGyro = bindGyro();
-    rafId.current = requestAnimationFrame(animate);
+    
+    // Initial paint & animation run
+    triggerAnimation();
 
     return () => {
       window.removeEventListener("pointermove", handleMove);
       if (unbindGyro) unbindGyro();
       cancelAnimationFrame(rafId.current);
     };
-  }, [animate]);
+  }, [animate, triggerAnimation]);
 
   return (
     <div

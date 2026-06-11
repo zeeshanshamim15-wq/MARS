@@ -247,14 +247,12 @@ export default function OrbitServices() {
   const [outerRadius, setOuterRadius] = useState(250);
   const [hasHover, setHasHover] = useState(true);
 
-  // Animation values driven via requestAnimationFrame
-  const rotationCwRef = useRef(0);
-  const rotationCcwRef = useRef(0);
+  // Animation values driven via Web Animations API
   const orbitCwRef = useRef<HTMLDivElement>(null);
   const orbitCcwRef = useRef<HTMLDivElement>(null);
   const planetsCwRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const planetsCcwRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const lastTimeRef = useRef<number | null>(null);
+  const animationsRef = useRef<Animation[]>([]);
 
   useEffect(() => {
     const media = window.matchMedia("(hover: hover)");
@@ -267,21 +265,27 @@ export default function OrbitServices() {
   useEffect(() => {
     const handleResize = () => {
       const w = window.innerWidth;
-      if (w < 480) {
-        setInnerRadius(78);
-        setOuterRadius(128);
+      if (w < 360) {
+        setInnerRadius(75);
+        setOuterRadius(120);
+      } else if (w < 400) {
+        setInnerRadius(88);
+        setOuterRadius(140);
+      } else if (w < 480) {
+        setInnerRadius(95);
+        setOuterRadius(155);
       } else if (w < 640) {
-        setInnerRadius(96);
-        setOuterRadius(156);
+        setInnerRadius(110);
+        setOuterRadius(180);
       } else if (w < 768) {
-        setInnerRadius(116);
-        setOuterRadius(186);
+        setInnerRadius(125);
+        setOuterRadius(200);
       } else if (w < 1024) {
-        setInnerRadius(136);
-        setOuterRadius(216);
+        setInnerRadius(145);
+        setOuterRadius(235);
       } else {
-        setInnerRadius(160);
-        setOuterRadius(250);
+        setInnerRadius(165);
+        setOuterRadius(265);
       }
     };
     handleResize();
@@ -289,56 +293,102 @@ export default function OrbitServices() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Drive continuous spin loop via requestAnimationFrame
+  // Initialize Web Animations on mount for rings and planets
   useEffect(() => {
-    let animId: number;
+    // Clear any previous animations
+    animationsRef.current.forEach((anim) => anim.cancel());
+    animationsRef.current = [];
 
-    const loop = (timestamp: number) => {
-      if (lastTimeRef.current === null) {
-        lastTimeRef.current = timestamp;
-      }
-      const dt = (timestamp - lastTimeRef.current) / 1000;
-      lastTimeRef.current = timestamp;
+    const anims: Animation[] = [];
 
-      // Slower by 25% on hover
-      const speedMultiplier = paused ? 0.25 : 1.0;
-
-      // CW Ring: 360 deg in 40s = 9 deg/sec
-      const degCw = 9 * dt * speedMultiplier;
-      rotationCwRef.current = (rotationCwRef.current + degCw) % 360;
-
-      // CCW Ring: 360 deg in 45s = 8 deg/sec
-      const degCcw = 8 * dt * speedMultiplier;
-      rotationCcwRef.current = (rotationCcwRef.current - degCcw) % 360;
-
-      // Direct DOM transformation to prevent React re-render lags
-      if (orbitCwRef.current) {
-        orbitCwRef.current.style.transform = `rotate(${rotationCwRef.current}deg)`;
-      }
-      if (orbitCcwRef.current) {
-        orbitCcwRef.current.style.transform = `rotate(${rotationCcwRef.current}deg)`;
-      }
-
-      // Counter-rotate planets to stay upright
-      planetsCwRefs.current.forEach((planet) => {
-        if (planet) {
-          planet.style.transform = `rotate(${-rotationCwRef.current}deg)`;
+    // CW Ring: 360 deg in 40s
+    if (orbitCwRef.current) {
+      const anim = orbitCwRef.current.animate(
+        [
+          { transform: "rotate(0deg)" },
+          { transform: "rotate(360deg)" }
+        ],
+        {
+          duration: 40000,
+          iterations: Infinity,
+          easing: "linear"
         }
-      });
-      planetsCcwRefs.current.forEach((planet) => {
-        if (planet) {
-          planet.style.transform = `rotate(${-rotationCcwRef.current}deg)`;
+      );
+      anims.push(anim);
+    }
+
+    // CCW Ring: -360 deg in 45s
+    if (orbitCcwRef.current) {
+      const anim = orbitCcwRef.current.animate(
+        [
+          { transform: "rotate(0deg)" },
+          { transform: "rotate(-360deg)" }
+        ],
+        {
+          duration: 45000,
+          iterations: Infinity,
+          easing: "linear"
         }
-      });
+      );
+      anims.push(anim);
+    }
 
-      animId = requestAnimationFrame(loop);
-    };
+    // CW Planets counter-rotation
+    planetsCwRefs.current.forEach((planet) => {
+      if (planet) {
+        const anim = planet.animate(
+          [
+            { transform: "rotate(0deg)" },
+            { transform: "rotate(-360deg)" }
+          ],
+          {
+            duration: 40000,
+            iterations: Infinity,
+            easing: "linear"
+          }
+        );
+        anims.push(anim);
+      }
+    });
 
-    animId = requestAnimationFrame(loop);
+    // CCW Planets counter-rotation
+    planetsCcwRefs.current.forEach((planet) => {
+      if (planet) {
+        const anim = planet.animate(
+          [
+            { transform: "rotate(0deg)" },
+            { transform: "rotate(360deg)" }
+          ],
+          {
+            duration: 45000,
+            iterations: Infinity,
+            easing: "linear"
+          }
+        );
+        anims.push(anim);
+      }
+    });
+
+    animationsRef.current = anims;
+
+    // Apply speed based on current paused state
+    const rate = paused ? 0.25 : 1.0;
+    anims.forEach((anim) => anim.updatePlaybackRate(rate));
+
     return () => {
-      cancelAnimationFrame(animId);
-      lastTimeRef.current = null;
+      anims.forEach((anim) => anim.cancel());
+      animationsRef.current = [];
     };
+  }, []);
+
+  // Update speed multipliers dynamically when hovering / pausing
+  useEffect(() => {
+    animationsRef.current.forEach((anim) => {
+      const rate = paused ? 0.25 : 1.0;
+      if (anim.playState !== "finished") {
+        anim.updatePlaybackRate(rate);
+      }
+    });
   }, [paused]);
 
   // Autoplay handler
@@ -368,10 +418,10 @@ export default function OrbitServices() {
         />
       </div>
 
-      <div className="relative mx-auto grid grid-cols-1 items-center gap-16 px-6 lg:grid-cols-2">
+      <div className="relative mx-auto grid grid-cols-1 items-center gap-16 px-0 sm:px-6 lg:grid-cols-2">
         {/* LEFT — Concentric Orbit */}
         <div
-          className="relative mx-auto flex h-[340px] w-[340px] sm:h-[450px] sm:w-[450px] md:h-[540px] md:w-[540px] items-center justify-center select-none"
+          className="relative -mx-6 sm:mx-auto flex h-[300px] w-[300px] min-[360px]:h-[340px] min-[360px]:w-[340px] min-[400px]:h-[370px] min-[400px]:w-[370px] min-[480px]:h-[420px] min-[480px]:w-[420px] sm:h-[480px] sm:w-[480px] md:h-[560px] md:w-[560px] lg:h-[620px] lg:w-[620px] items-center justify-center select-none"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
         >
@@ -439,7 +489,7 @@ export default function OrbitServices() {
                       }
                     }}
                     aria-label={`Select ${s.label}`}
-                    className="flex flex-col items-center group cursor-pointer focus:outline-none pointer-events-auto"
+                    className="relative flex flex-col items-center justify-center group cursor-pointer focus:outline-none pointer-events-auto h-10 w-10 md:h-12 md:w-12"
                   >
                     <div
                       className={`flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl transition-all duration-500 border ${
@@ -457,7 +507,7 @@ export default function OrbitServices() {
                     </div>
 
                     <span
-                      className={`mt-2 whitespace-nowrap text-[9px] md:text-[10px] font-semibold tracking-wider transition-all duration-300 ${
+                      className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap text-[9px] md:text-[10px] font-semibold tracking-wider transition-all duration-300 ${
                         isActive
                           ? "text-white block opacity-100 scale-100"
                           : "text-white/40 group-hover:block hidden md:block"
@@ -503,7 +553,7 @@ export default function OrbitServices() {
                       }
                     }}
                     aria-label={`Select ${s.label}`}
-                    className="flex flex-col items-center group cursor-pointer focus:outline-none pointer-events-auto"
+                    className="relative flex flex-col items-center justify-center group cursor-pointer focus:outline-none pointer-events-auto h-10 w-10 md:h-12 md:w-12"
                   >
                     <div
                       className={`flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl transition-all duration-500 border ${
@@ -521,7 +571,7 @@ export default function OrbitServices() {
                     </div>
 
                     <span
-                      className={`mt-2 whitespace-nowrap text-[9px] md:text-[10px] font-semibold tracking-wider transition-all duration-300 ${
+                      className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap text-[9px] md:text-[10px] font-semibold tracking-wider transition-all duration-300 ${
                         isActive
                           ? "text-white block opacity-100 scale-100"
                           : "text-white/40 group-hover:block hidden md:block"

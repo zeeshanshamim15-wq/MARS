@@ -195,8 +195,6 @@ export default function ScrollVideo() {
   const images2Ref = useRef<HTMLImageElement[]>([]);
   const frame1Tracker = useRef({ frame: 0 });
   const frame2Tracker = useRef({ frame: 0 });
-  const rafId = useRef(0);
-  const isActive = useRef(true);
   const lastDrawn1 = useRef(-1);
   const lastDrawn2 = useRef(-1);
 
@@ -217,6 +215,40 @@ export default function ScrollVideo() {
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const drawFrame1 = useCallback((frameVal: number) => {
+    const c = canvas1Ref.current;
+    const ctx = c?.getContext("2d");
+    if (c && ctx) {
+      const idx = Math.round(frameVal);
+      const clamped = Math.max(0, Math.min(CARD1_FRAMES - 1, idx));
+      if (clamped !== lastDrawn1.current) {
+        const img = images1Ref.current[clamped];
+        if (img) {
+          ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+          ctx.drawImage(img, 0, 0, CANVAS_W, CANVAS_H);
+          lastDrawn1.current = clamped;
+        }
+      }
+    }
+  }, []);
+
+  const drawFrame2 = useCallback((frameVal: number) => {
+    const c = canvas2Ref.current;
+    const ctx = c?.getContext("2d");
+    if (c && ctx) {
+      const idx = Math.round(frameVal);
+      const clamped = Math.max(0, Math.min(CARD2_FRAMES - 1, idx));
+      if (clamped !== lastDrawn2.current) {
+        const img = images2Ref.current[clamped];
+        if (img) {
+          ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+          ctx.drawImage(img, 0, 0, CANVAS_W, CANVAS_H);
+          lastDrawn2.current = clamped;
+        }
+      }
+    }
   }, []);
 
   const handleMobileChapterSelect = (chapter: number) => {
@@ -241,7 +273,9 @@ export default function ScrollVideo() {
           ease: "power1.inOut",
           snap: { frame: 1 },
           onUpdate: function() {
-            setScrollProgress(this.targets()[0].frame / (CARD1_FRAMES - 1));
+            const currentFrame = this.targets()[0].frame;
+            setScrollProgress(currentFrame / (CARD1_FRAMES - 1));
+            drawFrame1(currentFrame);
           }
         }
       );
@@ -259,7 +293,9 @@ export default function ScrollVideo() {
           ease: "power1.inOut",
           snap: { frame: 1 },
           onUpdate: function() {
-            setScrollProgress(this.targets()[0].frame / (CARD2_FRAMES - 1));
+            const currentFrame = this.targets()[0].frame;
+            setScrollProgress(currentFrame / (CARD2_FRAMES - 1));
+            drawFrame2(currentFrame);
           }
         }
       );
@@ -302,43 +338,7 @@ export default function ScrollVideo() {
   }, []);
 
   /* ── 2. Optimized canvas frame drawers ─────────────────── */
-  const renderFrame = useCallback(() => {
-    if (!isActive.current) return;
-
-    // Card 1
-    const c1 = canvas1Ref.current;
-    const ctx1 = c1?.getContext("2d");
-    if (c1 && ctx1) {
-      const idx1 = Math.round(frame1Tracker.current.frame);
-      const clamped1 = Math.max(0, Math.min(CARD1_FRAMES - 1, idx1));
-      if (clamped1 !== lastDrawn1.current) {
-        const img = images1Ref.current[clamped1];
-        if (img) {
-          ctx1.clearRect(0, 0, CANVAS_W, CANVAS_H);
-          ctx1.drawImage(img, 0, 0, CANVAS_W, CANVAS_H);
-          lastDrawn1.current = clamped1;
-        }
-      }
-    }
-
-    // Card 2
-    const c2 = canvas2Ref.current;
-    const ctx2 = c2?.getContext("2d");
-    if (c2 && ctx2) {
-      const idx2 = Math.round(frame2Tracker.current.frame);
-      const clamped2 = Math.max(0, Math.min(CARD2_FRAMES - 1, idx2));
-      if (clamped2 !== lastDrawn2.current) {
-        const img = images2Ref.current[clamped2];
-        if (img) {
-          ctx2.clearRect(0, 0, CANVAS_W, CANVAS_H);
-          ctx2.drawImage(img, 0, 0, CANVAS_W, CANVAS_H);
-          lastDrawn2.current = clamped2;
-        }
-      }
-    }
-
-    rafId.current = requestAnimationFrame(renderFrame);
-  }, []);
+  // Replaced continuous requestAnimationFrame drawing loops with direct GSAP scroll trigger hook rendering.
 
   /* ── 3. 3D Mouse Parallax Tilt (Concept 3 integration) ── */
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -390,8 +390,6 @@ export default function ScrollVideo() {
     const leftColumn = leftColumnRef.current;
     if (!section || !card1 || !card2 || !canvas1 || !canvas2 || !content || !leftColumn) return;
 
-    isActive.current = true;
-
     // Size canvases
     canvas1.width = CANVAS_W;
     canvas1.height = CANVAS_H;
@@ -413,8 +411,6 @@ export default function ScrollVideo() {
       lastDrawn2.current = 0;
     }
 
-    rafId.current = requestAnimationFrame(renderFrame);
-
     if (isMobile) {
       // Mobile setup: no pin, immediate reveal
       gsap.set(leftColumn, { yPercent: 0, opacity: 1 });
@@ -433,14 +429,15 @@ export default function ScrollVideo() {
           ease: "power1.inOut",
           snap: { frame: 1 },
           onUpdate: () => {
-            setScrollProgress(frame1Tracker.current.frame / (CARD1_FRAMES - 1));
+            const currentFrame = frame1Tracker.current.frame;
+            setScrollProgress(currentFrame / (CARD1_FRAMES - 1));
+            drawFrame1(currentFrame);
           }
         }
       );
 
       return () => {
-        isActive.current = false;
-        cancelAnimationFrame(rafId.current);
+        // Cleanup mobile state
       };
     }
 
@@ -511,6 +508,9 @@ export default function ScrollVideo() {
       duration: 0.34,
       ease: "none",
       snap: { frame: 1 },
+      onUpdate: () => {
+        drawFrame1(frame1Tracker.current.frame);
+      }
     }, 0.18);
 
     // Phase 4: Card 2 transitions (crossfade overlay)
@@ -526,18 +526,19 @@ export default function ScrollVideo() {
       duration: 0.36,
       ease: "none",
       snap: { frame: 1 },
+      onUpdate: () => {
+        drawFrame2(frame2Tracker.current.frame);
+      }
     }, 0.58);
 
     ScrollTrigger.refresh();
 
     return () => {
-      isActive.current = false;
-      cancelAnimationFrame(rafId.current);
       ScrollTrigger.getAll()
         .filter((st) => st.vars.trigger === section)
         .forEach((st) => st.kill());
     };
-  }, [loaded, renderFrame, isMobile]);
+  }, [loaded, drawFrame1, drawFrame2, isMobile]);
 
   /* ── 5. Shared card styling ────────────────────────────── */
   const cardStyle: React.CSSProperties = {
