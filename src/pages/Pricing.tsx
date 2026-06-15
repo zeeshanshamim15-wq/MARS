@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParallaxBackground from "@/components/ParallaxBackground";
@@ -30,7 +31,8 @@ const PLANS = [
       "Multi-user roles"
     ],
     isPopular: false,
-    cta: "Start Free Trial"
+    cta: "Start Free Trial",
+    href: "https://mars-ai-web.onrender.com/start"
   },
   {
     name: "Abdul Intern (Lite)",
@@ -47,7 +49,8 @@ const PLANS = [
       "Standard support channels"
     ],
     isPopular: false,
-    cta: "Hire Intern"
+    cta: "Hire Intern",
+    href: "/onboarding?plan=intern"
   },
   {
     name: "Abdul Pro (CA-Grade)",
@@ -64,7 +67,8 @@ const PLANS = [
       "Tally & GST export bridges"
     ],
     isPopular: true,
-    cta: "Hire Pro Employee"
+    cta: "Hire Pro Employee",
+    href: "/onboarding?plan=pro"
   },
   {
     name: "Abdul Max (Enterprise)",
@@ -81,7 +85,8 @@ const PLANS = [
       "Custom integrations"
     ],
     isPopular: false,
-    cta: "Configure Max"
+    cta: "Configure Max",
+    href: "/onboarding?plan=max"
   }
 ];
 
@@ -226,15 +231,31 @@ export default function Pricing() {
                       </div>
                     </div>
 
-                    <button
-                      className={`w-full py-2.5 rounded-none text-xs font-semibold transition z-20 relative ${
-                        plan.isPopular
-                          ? "bg-white text-black hover:scale-[1.02]"
-                          : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
-                      }`}
-                    >
-                      {plan.cta}
-                    </button>
+                    {plan.href.startsWith("http") ? (
+                      <a
+                        href={plan.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`w-full py-2.5 rounded-none text-xs font-semibold transition z-20 relative flex items-center justify-center ${
+                          plan.isPopular
+                            ? "bg-white text-black hover:scale-[1.02]"
+                            : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
+                        }`}
+                      >
+                        {plan.cta}
+                      </a>
+                    ) : (
+                      <Link
+                        to={plan.href}
+                        className={`w-full py-2.5 rounded-none text-xs font-semibold transition z-20 relative flex items-center justify-center ${
+                          plan.isPopular
+                            ? "bg-white text-black hover:scale-[1.02]"
+                            : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
+                        }`}
+                      >
+                        {plan.cta}
+                      </Link>
+                    )}
                   </BorderLaserCard>
                 </div>
               ))}
@@ -294,15 +315,31 @@ export default function Pricing() {
                   </div>
                 </div>
 
-                <button
-                  className={`w-full py-2.5 rounded-none md:rounded-xl text-xs font-semibold transition z-20 relative ${
-                    plan.isPopular
-                      ? "bg-white text-black hover:scale-[1.02]"
-                      : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
-                  }`}
-                >
-                  {plan.cta}
-                </button>
+                {plan.href.startsWith("http") ? (
+                  <a
+                    href={plan.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`w-full py-2.5 rounded-none md:rounded-xl text-xs font-semibold transition z-20 relative flex items-center justify-center ${
+                      plan.isPopular
+                        ? "bg-white text-black hover:scale-[1.02]"
+                        : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
+                    }`}
+                  >
+                    {plan.cta}
+                  </a>
+                ) : (
+                  <Link
+                    to={plan.href}
+                    className={`w-full py-2.5 rounded-none md:rounded-xl text-xs font-semibold transition z-20 relative flex items-center justify-center ${
+                      plan.isPopular
+                        ? "bg-white text-black hover:scale-[1.02]"
+                        : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
+                    }`}
+                  >
+                    {plan.cta}
+                  </Link>
+                )}
               </BorderLaserCard>
             ))}
           </div>
