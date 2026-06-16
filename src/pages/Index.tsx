@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 
 const HeroCanvas = lazy(() => import("@/components/ParticleSphere/HeroCanvas"));
-const ScrollVideo = lazy(() => import("@/components/ScrollVideo"));
+const Hero3DZoom = lazy(() => import("@/components/Hero3DZoom"));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -618,7 +618,7 @@ export default function Index() {
 
         {/* Scroll-scrubbed video showcase */}
         <Suspense fallback={null}>
-          <ScrollVideo />
+          <Hero3DZoom />
         </Suspense>
 
         {/* REDESIGNED: Bento Grid Active Verticals */}
