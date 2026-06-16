@@ -12,29 +12,27 @@ import {
   Activity 
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import WordReveal from "./ui/WordReveal";
-import MetallicText from "./ui/MetallicText";
 
 gsap.registerPlugin(ScrollTrigger);
 
 // Helper for typewriter or log ticker effect
 function LogTicker() {
   const [logs, setLogs] = useState<string[]>([
-    "SYS: Initializing MARS OS v3.0...",
-    "DB: Handshake active via SSL/TLS...",
+    "SYS: Syncing leads with CRM...",
+    "AI_AGENTS: Handshake active via SSL/TLS...",
     "NET: Network latency optimized to 4.8ms"
   ]);
 
   useEffect(() => {
     const pool = [
-      "DB: Secure Khata instance resolved.",
-      "AI_DIALER: Call connection thread #12 active.",
-      "API: Fetching supersonic outbound ping.",
-      "SYS: Embedded database operational check... PASSED",
+      "CRM: Auto-synced 5 new leads.",
+      "AI_DIALER: outbound call connection thread active.",
+      "SYS: Scheduled discovery call booked for client.",
+      "SYS: Operational check on all 3 active agents... PASSED",
       "FLOW: n8n workflow webhook executed successfully.",
-      "SEO: Perfect Google Lighthouse score verified.",
-      "GPU: Core temperature stable at 52°C.",
-      "VFX: Real-time rendering pipeline cached."
+      "SEO: Google Lighthouse speed score verified at 99/100.",
+      "AUTO_SYNC: Ramesh ledger entry reconciled.",
+      "EMAIL: Auto-followup sent to prospective lead."
     ];
 
     const interval = setInterval(() => {
@@ -65,6 +63,12 @@ export default function Hero3DZoom() {
   const containerRef = useRef<HTMLDivElement>(null);
   const dashboardRef = useRef<HTMLDivElement>(null);
   
+  // Text Overlay Refs
+  const t1Ref = useRef<HTMLDivElement>(null);
+  const t2Ref = useRef<HTMLDivElement>(null);
+  const t3Ref = useRef<HTMLDivElement>(null);
+
+  // Widget Refs
   const w1Ref = useRef<HTMLDivElement>(null);
   const w2Ref = useRef<HTMLDivElement>(null);
   const w3Ref = useRef<HTMLDivElement>(null);
@@ -86,30 +90,41 @@ export default function Hero3DZoom() {
 
     const section = sectionRef.current;
     const dashboard = dashboardRef.current;
+    
+    const t1 = t1Ref.current;
+    const t2 = t2Ref.current;
+    const t3 = t3Ref.current;
+
     const w1 = w1Ref.current;
     const w2 = w2Ref.current;
     const w3 = w3Ref.current;
     const w4 = w4Ref.current;
 
-    if (!section || !dashboard || !w1 || !w2 || !w3 || !w4) return;
+    if (!section || !dashboard || !t1 || !t2 || !t3 || !w1 || !w2 || !w3 || !w4) return;
 
-    // Reset initial styles for desktop GSAP animation
+    // Reset initial dashboard styles (tilted, dim)
     gsap.set(dashboard, {
       rotateX: 15,
-      scale: 0.85,
+      scale: 0.82,
       z: -120,
-      opacity: 0.5,
+      opacity: 0.15,
       transformPerspective: 1200,
       transformOrigin: "center center",
     });
 
-    // Widgets start closer to the center, hidden/subtle
+    // Reset initial typography overlay styles
+    gsap.set([t1, t2, t3], {
+      opacity: 0,
+      y: 20,
+    });
+
+    // Widgets start closer to center, fully hidden initially
     gsap.set([w1, w2, w3, w4], {
       opacity: 0,
       scale: 0.8,
     });
     
-    // Position individual initial locations for parallax drift
+    // Initial drift offsets
     gsap.set(w1, { xPercent: -15, yPercent: -10, z: -50 });
     gsap.set(w2, { xPercent: 15, yPercent: -15, z: -50 });
     gsap.set(w3, { xPercent: -20, yPercent: 10, z: -50 });
@@ -119,23 +134,47 @@ export default function Hero3DZoom() {
       scrollTrigger: {
         trigger: section,
         start: "top top",
-        end: "+=220%",
+        end: "+=260%",
         pin: true,
         scrub: 1,
         anticipatePin: 1,
       },
     });
 
-    // Core Animation Timeline
+    // ── NARRATIVE SCROLL-TELLING TIMELINE ──
+
+    // Text 1: Fades in and out (0.00 -> 0.28)
+    tl.to(t1, { opacity: 1, y: 0, duration: 0.12, ease: "power2.out" }, 0.02);
+    tl.to(t1, { opacity: 0, y: -15, duration: 0.12, ease: "power2.in" }, 0.26);
+
+    // Text 2: Fades in and out (0.32 -> 0.60)
+    tl.to(t2, { opacity: 1, y: 0, duration: 0.12, ease: "power2.out" }, 0.34);
+    tl.to(t2, { opacity: 0, y: -15, duration: 0.12, ease: "power2.in" }, 0.58);
+
+    // Text 3: Fades in and stays (0.64 -> 1.00)
+    tl.to(t3, { opacity: 1, y: 0, duration: 0.15, ease: "power2.out" }, 0.68);
+
+
+    // ── DASHBOARD ZOOM & PERSPECTIVE TIMELINE ──
+    // Zoom in slowly over the entire scroll range
     tl.to(dashboard, {
       rotateX: 0,
       scale: 1,
       z: 0,
-      opacity: 1,
-      duration: 1,
-      ease: "power2.out",
+      duration: 1.0,
+      ease: "none",
       force3D: true,
     }, 0);
+
+    // Dashboard fades in to full focus right around the Text 3 transition
+    tl.to(dashboard, {
+      opacity: 1,
+      duration: 0.45,
+      ease: "power2.out",
+    }, 0.52);
+
+
+    // ── PARALLAX WIDGETS TIMELINE (Staggered fade-in along with dashboard) ──
 
     // Widget 1: Inbound call bubble - Drifts up & left
     tl.to(w1, {
@@ -144,10 +183,10 @@ export default function Hero3DZoom() {
       xPercent: -45,
       yPercent: -28,
       z: 80,
-      duration: 0.85,
-      ease: "power1.out",
+      duration: 0.45,
+      ease: "power2.out",
       force3D: true,
-    }, 0.1);
+    }, 0.52);
 
     // Widget 2: n8n automation connector - Drifts up & right
     tl.to(w2, {
@@ -156,10 +195,10 @@ export default function Hero3DZoom() {
       xPercent: 45,
       yPercent: -35,
       z: 100,
-      duration: 0.85,
-      ease: "power1.out",
+      duration: 0.45,
+      ease: "power2.out",
       force3D: true,
-    }, 0.05);
+    }, 0.55);
 
     // Widget 3: Lighthouse dial - Drifts down & left
     tl.to(w3, {
@@ -168,10 +207,10 @@ export default function Hero3DZoom() {
       xPercent: -55,
       yPercent: 30,
       z: 60,
-      duration: 0.85,
-      ease: "power1.out",
+      duration: 0.45,
+      ease: "power2.out",
       force3D: true,
-    }, 0.15);
+    }, 0.60);
 
     // Widget 4: Terminal console - Drifts down & right
     tl.to(w4, {
@@ -180,10 +219,10 @@ export default function Hero3DZoom() {
       xPercent: 55,
       yPercent: 25,
       z: 90,
-      duration: 0.85,
-      ease: "power1.out",
+      duration: 0.45,
+      ease: "power2.out",
       force3D: true,
-    }, 0.08);
+    }, 0.57);
 
     return () => {
       ScrollTrigger.getAll()
@@ -198,27 +237,52 @@ export default function Hero3DZoom() {
       id="core-zoom-portal"
       className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-transparent z-20 py-20 px-4"
     >
-      {/* Background blueprint grid styling specifically matching website details */}
+      {/* Background blueprint grid */}
       <div className="absolute inset-0 bg-transparent opacity-[0.03] pointer-events-none border-b border-white/5" 
            style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
       
-      {/* Container holding title and 3D portal */}
+      {/* Container holding overlays and 3D portal */}
       <div className="relative mx-auto w-full max-w-7xl flex flex-col items-center gap-10 md:gap-14 z-10 text-center">
         
-        {/* Visual Title Header */}
-        <div className="max-w-2xl px-4 flex flex-col items-center">
-          <p className="text-[9px] font-mono uppercase tracking-[0.45em] text-white/35 mb-2.5">
-            01 // INTEGRATION_MATRIX
-          </p>
-          <h2 className="text-3xl font-light tracking-tight text-white md:text-5xl leading-tight">
-            <WordReveal text="Unified" /> <MetallicText text="Infrastructure" className="text-3xl md:text-5xl mt-1.5 inline-block" />
-          </h2>
-          <p className="text-xs text-white/40 max-w-sm mt-3 leading-relaxed font-light">
-            {isMobile 
-              ? "Sleek, secure, autonomous integrations driving enterprise performance."
-              : "Scroll to zoom into the MARS custom control interface."}
-          </p>
-        </div>
+        {/* MOBILE HEADLINE FALLBACK (Static arrangement for viewports < 768px) */}
+        {isMobile ? (
+          <div className="max-w-md px-4 text-center space-y-3">
+            <p className="text-[9px] font-mono uppercase tracking-[0.45em] text-white/35">
+              01 // CORE_INFRASTRUCTURE
+            </p>
+            <h2 className="text-3xl font-light tracking-tight text-white leading-tight">
+              You focus on <span className="font-semibold text-emerald-400">your business.</span>
+            </h2>
+            <h3 className="text-lg font-light text-white/80 leading-normal">
+              We build the <span className="font-semibold text-emerald-400">invisible engine.</span>
+            </h3>
+            <p className="text-[11px] font-mono text-white/40 tracking-wider">
+              AI, AUTOMATION & SYSTEMS. <span className="text-emerald-400 font-semibold">WORKING 24/7.</span>
+            </p>
+          </div>
+        ) : (
+          /* DESKTOP NARRATIVE SCROLL-TELLING TEXT CONTAINER */
+          <div className="relative w-full h-24 flex items-center justify-center">
+            <div 
+              ref={t1Ref} 
+              className="absolute text-3xl md:text-5xl font-light tracking-tight text-white leading-snug drop-shadow-md select-none"
+            >
+              You focus on <span className="font-semibold text-emerald-400">your business.</span>
+            </div>
+            <div 
+              ref={t2Ref} 
+              className="absolute text-3xl md:text-5xl font-light tracking-tight text-white leading-snug drop-shadow-md select-none"
+            >
+              We build the <span className="font-semibold text-emerald-400">invisible engine.</span>
+            </div>
+            <div 
+              ref={t3Ref} 
+              className="absolute text-3xl md:text-5xl font-light tracking-tight text-white leading-snug drop-shadow-md select-none"
+            >
+              AI, Automation & Systems. <span className="font-semibold text-emerald-400">Working 24/7.</span>
+            </div>
+          </div>
+        )}
 
         {/* 3D Perspective Animation Container */}
         <div 
@@ -245,10 +309,10 @@ export default function Hero3DZoom() {
                 <span className="h-2 w-2 rounded-full bg-white/10 border border-white/15" />
                 <span className="ml-2 font-semibold text-white/60 tracking-wider">MARS_OS_v3.0.0</span>
               </div>
-              <div className="hidden sm:block tracking-[0.2em]">CORE // DIAGNOSTICS</div>
+              <div className="hidden sm:block tracking-[0.2em]">GROWTH_ENGINE // OUTCOMES</div>
               <div className="flex items-center gap-1.5 text-emerald-400">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="tracking-wide">SYS: SECURE</span>
+                <span className="tracking-wide">SYS: OPTIMIZED</span>
               </div>
             </div>
 
@@ -270,8 +334,8 @@ export default function Hero3DZoom() {
                 {/* SVG Performance Line Graph */}
                 <div className="bg-white/[0.01] border border-white/5 rounded-xl p-3 flex flex-col justify-between h-[110px] md:h-[130px] relative">
                   <div className="flex items-center justify-between font-mono text-[8px] text-white/35">
-                    <span>TRANSACTION_THROUGHPUT</span>
-                    <span className="text-emerald-400">+142% SPEED</span>
+                    <span>CLIENT_GROWTH_CURVE</span>
+                    <span className="text-emerald-400">+142% CONVERSION</span>
                   </div>
                   <div className="flex-1 w-full flex items-end pt-2">
                     <svg viewBox="0 0 500 130" className="w-full h-full overflow-visible">
@@ -299,16 +363,16 @@ export default function Hero3DZoom() {
                 {/* Bottom stats layout */}
                 <div className="grid grid-cols-3 gap-2 text-left font-mono">
                   <div className="bg-white/[0.02] border border-white/5 rounded-lg p-2">
-                    <span className="text-[7px] text-white/30 block tracking-wider">CPU_LOAD</span>
-                    <span className="text-[10px] sm:text-xs text-white/70 block mt-0.5">14.8% // LOW</span>
+                    <span className="text-[6px] md:text-[7px] text-emerald-400 block tracking-wider font-semibold">MANUAL HOURS SAVED</span>
+                    <span className="text-[9px] sm:text-xs text-white/70 block mt-0.5">124 hrs/mo</span>
                   </div>
                   <div className="bg-white/[0.02] border border-white/5 rounded-lg p-2">
-                    <span className="text-[7px] text-white/30 block tracking-wider">LEDGER_SYNC</span>
-                    <span className="text-[10px] sm:text-xs text-white/70 block mt-0.5">VERIFIED</span>
+                    <span className="text-[6px] md:text-[7px] text-white/30 block tracking-wider">AUTO_CRM_SYNC</span>
+                    <span className="text-[9px] sm:text-xs text-white/70 block mt-0.5">VERIFIED</span>
                   </div>
                   <div className="bg-white/[0.02] border border-white/5 rounded-lg p-2">
-                    <span className="text-[7px] text-white/30 block tracking-wider">EDGE_LATENCY</span>
-                    <span className="text-[10px] sm:text-xs text-emerald-400 block mt-0.5">4.2ms // OK</span>
+                    <span className="text-[6px] md:text-[7px] text-emerald-400 block tracking-wider font-semibold">NEW LEADS SECURED</span>
+                    <span className="text-[9px] sm:text-xs text-emerald-400 block mt-0.5">42 // LIVE</span>
                   </div>
                 </div>
               </div>
@@ -316,16 +380,16 @@ export default function Hero3DZoom() {
               {/* Sidebar Right */}
               <div className="hidden sm:flex w-36 bg-white/[0.01] border-l border-white/5 p-4 flex-col gap-3.5 text-left font-mono text-[8px] text-white/35">
                 <div>
-                  <span className="text-white/20 block">DEPLOY_ZONE</span>
-                  <span className="text-white/60 block mt-0.5">ASUS_LOCAL_SERVER</span>
+                  <span className="text-white/20 block">ACTIVE AI AGENTS</span>
+                  <span className="text-emerald-400 block mt-0.5">3 OPERATIONAL</span>
                 </div>
                 <div>
-                  <span className="text-white/20 block">SECURE_TUNNEL</span>
-                  <span className="text-white/60 block mt-0.5">SSH_RSA_2048</span>
+                  <span className="text-white/20 block">ACTIVE INTEGRATIONS</span>
+                  <span className="text-white/60 block mt-0.5">API_CRM_EMAILS</span>
                 </div>
                 <div>
-                  <span className="text-white/20 block">DB_QUERIES</span>
-                  <span className="text-emerald-400/80 block mt-0.5">OPTIMIZED // 100%</span>
+                  <span className="text-white/20 block">WORKFLOWS AUTOMATED</span>
+                  <span className="text-emerald-400/80 block mt-0.5">100% // DONE</span>
                 </div>
               </div>
             </div>
