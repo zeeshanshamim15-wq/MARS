@@ -237,49 +237,72 @@ export default function Hero3DZoom() {
       id="core-zoom-portal"
       className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-transparent z-20 py-20 px-4"
     >
+      {/* Custom styles for emerald metallic text sweep effect matching brand style */}
+      <style>{`
+        .emerald-text-sweep {
+          background: linear-gradient(
+            120deg,
+            #10b981 15%,
+            #34d399 30%,
+            #a7f3d0 45%,
+            #ffffff 50%,
+            #a7f3d0 55%,
+            #34d399 70%,
+            #10b981 85%
+          );
+          background-size: 300% 100%;
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: metalSweep 5.5s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+          display: inline-block;
+          filter: drop-shadow(0 0 12px rgba(52, 211, 153, 0.25));
+        }
+      `}</style>
+
       {/* Background blueprint grid */}
       <div className="absolute inset-0 bg-transparent opacity-[0.03] pointer-events-none border-b border-white/5" 
            style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
       
-      {/* Container holding overlays and 3D portal */}
-      <div className="relative mx-auto w-full max-w-7xl flex flex-col items-center gap-10 md:gap-14 z-10 text-center">
+      {/* Container holding overlays and 3D portal (Reduced gap to bring text closer to picture) */}
+      <div className="relative mx-auto w-full max-w-7xl flex flex-col items-center gap-4 md:gap-5 z-10 text-center">
         
         {/* MOBILE HEADLINE FALLBACK (Static arrangement for viewports < 768px) */}
         {isMobile ? (
-          <div className="max-w-md px-4 text-center space-y-3">
+          <div className="max-w-md px-4 text-center space-y-3 mb-4">
             <p className="text-[9px] font-mono uppercase tracking-[0.45em] text-white/35">
               01 // CORE_INFRASTRUCTURE
             </p>
-            <h2 className="text-3xl font-light tracking-tight text-white leading-tight">
-              You focus on <span className="font-semibold text-emerald-400">your business.</span>
+            <h2 className="text-2xl font-light tracking-tight text-white leading-tight">
+              You focus on <span className="metallic-text-sweep font-bold">your business.</span>
             </h2>
             <h3 className="text-lg font-light text-white/80 leading-normal">
-              We build the <span className="font-semibold text-emerald-400">invisible engine.</span>
+              We build the <span className="metallic-text-sweep font-bold">invisible engine.</span>
             </h3>
             <p className="text-[11px] font-mono text-white/40 tracking-wider">
-              AI, AUTOMATION & SYSTEMS. <span className="text-emerald-400 font-semibold">WORKING 24/7.</span>
+              AI, AUTOMATION & SYSTEMS. <span className="emerald-text-sweep font-bold">WORKING 24/7.</span>
             </p>
           </div>
         ) : (
-          /* DESKTOP NARRATIVE SCROLL-TELLING TEXT CONTAINER */
-          <div className="relative w-full h-24 flex items-center justify-center">
+          /* DESKTOP NARRATIVE SCROLL-TELLING TEXT CONTAINER (Pushed down/closer to dashboard) */
+          <div className="relative w-full h-16 flex items-center justify-center translate-y-6 md:translate-y-8">
             <div 
               ref={t1Ref} 
-              className="absolute text-3xl md:text-5xl font-light tracking-tight text-white leading-snug drop-shadow-md select-none"
+              className="absolute text-3xl md:text-5xl font-light tracking-tight text-white/95 leading-snug drop-shadow-md select-none"
             >
-              You focus on <span className="font-semibold text-emerald-400">your business.</span>
+              You focus on <span className="metallic-text-sweep font-bold">your business.</span>
             </div>
             <div 
               ref={t2Ref} 
-              className="absolute text-3xl md:text-5xl font-light tracking-tight text-white leading-snug drop-shadow-md select-none"
+              className="absolute text-3xl md:text-5xl font-light tracking-tight text-white/95 leading-snug drop-shadow-md select-none"
             >
-              We build the <span className="font-semibold text-emerald-400">invisible engine.</span>
+              We build the <span className="metallic-text-sweep font-bold">invisible engine.</span>
             </div>
             <div 
               ref={t3Ref} 
-              className="absolute text-3xl md:text-5xl font-light tracking-tight text-white leading-snug drop-shadow-md select-none"
+              className="absolute text-3xl md:text-5xl font-light tracking-tight text-white/95 leading-snug drop-shadow-md select-none"
             >
-              AI, Automation & Systems. <span className="font-semibold text-emerald-400">Working 24/7.</span>
+              AI, Automation & Systems. <span className="emerald-text-sweep font-bold">Working 24/7.</span>
             </div>
           </div>
         )}
