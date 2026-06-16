@@ -253,7 +253,7 @@ export default function Hero3DZoom() {
     <section
       ref={sectionRef}
       id="core-zoom-portal"
-      className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-transparent z-20 py-20 px-4"
+      className="relative min-h-fit md:min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-transparent z-20 py-10 md:py-20 px-4"
     >
       {/* Custom styles for emerald metallic text sweep effect matching brand style */}
       <style>{`
@@ -294,7 +294,7 @@ export default function Hero3DZoom() {
         
         {/* MOBILE HEADLINE FALLBACK (Static arrangement for viewports < 768px) */}
         {isMobile ? (
-          <div className="max-w-md px-4 text-center space-y-8 py-10 mb-8">
+          <div className="max-w-md px-4 text-center space-y-6 pt-4 pb-0 mb-2">
             <p className="text-[9px] font-mono uppercase tracking-[0.45em] text-white/35">
               01 // CORE_INFRASTRUCTURE
             </p>

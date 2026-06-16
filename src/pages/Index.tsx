@@ -632,7 +632,7 @@ export default function Index() {
         {/* REDESIGNED: Bento Grid Active Verticals */}
         <section
           id="services"
-          className="relative flex flex-col items-center justify-center px-6 pt-32 md:pt-40 pb-24 text-[hsl(0_0%_96%)] premium-blueprint-grid"
+          className="relative flex flex-col items-center justify-center px-6 pt-12 md:pt-40 pb-24 text-[hsl(0_0%_96%)] premium-blueprint-grid"
         >
           <div className="relative z-10 mx-auto max-w-6xl w-full flex flex-col gap-16">
             
