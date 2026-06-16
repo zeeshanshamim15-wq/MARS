@@ -9,7 +9,7 @@ import WordReveal from "@/components/ui/WordReveal";
 import MetallicText from "@/components/ui/MetallicText";
 import { PRICING_SERVICES } from "@/data/pricingData";
 
-const ICON_MAP: Record<string, React.ComponentType<any>> = {
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   "web-dev": Globe,
   "automation": Zap,
   "filmmaking": Video,
@@ -127,6 +127,16 @@ export const INTERACTION_COSTS = [
 
 export default function Pricing() {
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   return (
     <div className="relative isolate min-h-screen overflow-x-hidden bg-[hsl(210_24%_5%)] text-foreground">
@@ -161,7 +171,7 @@ export default function Pricing() {
               >
                 <BorderLaserCard
                   className="p-6 h-full flex flex-col justify-between bg-black/40 hover:bg-black/60 border border-white/5 transition-all duration-300"
-                  borderRadius={24}
+                  borderRadius={isMobile ? 0 : 24}
                 >
                   <div>
                     {/* Top icon and identifier */}

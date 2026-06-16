@@ -37,7 +37,7 @@ import { PRICING_SERVICES } from "@/data/pricingData";
 import { PLANS, ADDONS, INTERACTION_COSTS } from "./Pricing";
 
 // Helper map to translate service ID to Lucide Icon
-const ICON_MAP: Record<string, React.ComponentType<any>> = {
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   "web-dev": Globe,
   "automation": Zap,
   "filmmaking": Video,
@@ -193,21 +193,21 @@ function WorkflowBuilderSimulator() {
       </h4>
 
       {/* Nodes visualizer */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-4 border-b border-white/5 mb-4">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 py-4 border-b border-white/5 mb-4">
         {/* Node 1 */}
-        <div className={`px-4 py-2 border rounded-xl font-mono text-[10px] transition duration-300 ${status === "TRIGGER" ? "bg-emerald-500/10 border-emerald-500 text-emerald-400" : "bg-white/5 border-white/10 text-white/60"}`}>
+        <div className={`px-3 py-1.5 md:px-4 md:py-2 border rounded-xl font-mono text-[9px] md:text-[10px] transition duration-300 ${status === "TRIGGER" ? "bg-emerald-500/10 border-emerald-500 text-emerald-400" : "bg-white/5 border-white/10 text-white/60"}`}>
           ⚡ WEBHOOK_TRIGGER
         </div>
-        <div className="text-white/20">➔</div>
+        <div className="text-white/20 transform rotate-90 md:rotate-0">➔</div>
         
         {/* Node 2 */}
-        <div className={`px-4 py-2 border rounded-xl font-mono text-[10px] transition duration-300 ${status === "AGENT" ? "bg-emerald-500/10 border-emerald-500 text-emerald-400" : "bg-white/5 border-white/10 text-white/60"}`}>
+        <div className={`px-3 py-1.5 md:px-4 md:py-2 border rounded-xl font-mono text-[9px] md:text-[10px] transition duration-300 ${status === "AGENT" ? "bg-emerald-500/10 border-emerald-500 text-emerald-400" : "bg-white/5 border-white/10 text-white/60"}`}>
           🤖 ABDUL_ACCOUNTING
         </div>
-        <div className="text-white/20">➔</div>
+        <div className="text-white/20 transform rotate-90 md:rotate-0">➔</div>
 
         {/* Node 3 */}
-        <div className={`px-4 py-2 border rounded-xl font-mono text-[10px] transition duration-300 ${status === "DATABASE" ? "bg-emerald-500/10 border-emerald-500 text-emerald-400" : "bg-white/5 border-white/10 text-white/60"}`}>
+        <div className={`px-3 py-1.5 md:px-4 md:py-2 border rounded-xl font-mono text-[9px] md:text-[10px] transition duration-300 ${status === "DATABASE" ? "bg-emerald-500/10 border-emerald-500 text-emerald-400" : "bg-white/5 border-white/10 text-white/60"}`}>
           🗄️ SUPABASE_SYNC
         </div>
       </div>
@@ -895,12 +895,11 @@ export default function PricingDetail() {
 
   useEffect(() => {
     if (currentService) {
-      // Initialize with all indices selected by default
       setSelectedIndices(currentService.subServices.map((_, idx) => idx));
     } else {
       setSelectedIndices([]);
     }
-  }, [serviceId]);
+  }, [serviceId, currentService]);
 
   const toggleIndex = (idx: number) => {
     setSelectedIndices(prev => 
@@ -961,7 +960,7 @@ export default function PricingDetail() {
 
       <Navbar />
 
-      <main className="relative z-10 mx-auto max-w-7xl px-6 pt-36 md:pt-44 pb-32 md:px-10">
+      <main className="relative z-10 mx-auto max-w-7xl px-6 pt-36 md:pt-44 pb-44 md:pb-32 md:px-10">
         <div className="max-w-6xl mx-auto">
           {/* Back button */}
           <button
@@ -1443,6 +1442,45 @@ export default function PricingDetail() {
           )}
         </div>
       </main>
+
+      {/* Sticky Bottom Bar for Mobile */}
+      {isMobile && (
+        <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-md border-t border-white/10 px-6 py-3.5 z-40 flex items-center justify-between safe-bottom">
+          <div className="flex flex-col">
+            {allSelected ? (
+              <>
+                <span className="text-[8px] text-emerald-400 font-bold uppercase tracking-wider font-mono">
+                  {currentService.bundleName}
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs text-white/40 line-through font-mono">
+                    ₹{currentService.originalPrice.toLocaleString("en-IN")}
+                  </span>
+                  <span className="text-base font-bold font-mono text-emerald-400">
+                    ₹{currentService.bundlePrice.toLocaleString("en-IN")}
+                  </span>
+                </div>
+              </>
+            ) : (
+              <>
+                <span className="text-[8px] text-white/40 uppercase tracking-wider font-mono">
+                  Estimated Cost
+                </span>
+                <span className="text-base font-bold font-mono text-white">
+                  ₹{subtotal.toLocaleString("en-IN")}
+                </span>
+              </>
+            )}
+          </div>
+          
+          <Link
+            to={`/onboarding?service=${currentService.id}&package=${allSelected ? "bundle" : "custom"}`}
+            className="px-4 py-2 bg-white text-black font-semibold rounded-lg text-xs font-mono tracking-wider transition cursor-pointer"
+          >
+            Hire MARS
+          </Link>
+        </div>
+      )}
 
       <Footer />
     </div>
