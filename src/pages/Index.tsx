@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParallaxBackground from "@/components/ParallaxBackground";
+import automationPreview from "@/assets/automation-preview.jpg";
+import webdevPreview from "@/assets/webdev-preview.jpg";
+import vfxPreview from "@/assets/vfx-preview.jpg";
+import consultingPreview from "@/assets/consulting-preview.jpg";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Group } from "three";
@@ -257,7 +261,7 @@ const SERVICE_MEDIA_DETAILS = [
   { 
     title: "Intelligent Automation (IA)", 
     description: "Visual representation of active CRM workflows, database connections, and n8n webhook routing pipelines.",
-    placeholder: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+    placeholder: automationPreview,
     tag: "IA_CORE // PROTO_01",
     pillars: [
       "n8n, Zapier & custom node bridges",
@@ -269,7 +273,7 @@ const SERVICE_MEDIA_DETAILS = [
   { 
     title: "Web Development & SEO", 
     description: "Sleek preview of responsive, speed-optimized storefronts scoring 99+ on Google Lighthouse diagnostics.",
-    placeholder: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+    placeholder: webdevPreview,
     tag: "DEV_CORE // SPEED_TEST",
     pillars: [
       "React, Next.js & Tailwind CSS",
@@ -281,7 +285,7 @@ const SERVICE_MEDIA_DETAILS = [
   { 
     title: "AI Filmmaking & VFX", 
     description: "Cinematic commercial reel showcase featuring synthetic casting, AI voiceovers, and premium visual editing.",
-    placeholder: "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=800&q=80",
+    placeholder: vfxPreview,
     tag: "VFX_CORE // GEN_MEDIA",
     pillars: [
       "DaVinci Resolve & Unreal Engine 5",
@@ -293,7 +297,7 @@ const SERVICE_MEDIA_DETAILS = [
   { 
     title: "Strategic Consultancy", 
     description: "Interactive operational scaling map highlighting funnel optimizations and verified client ROI growth.",
-    placeholder: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80",
+    placeholder: consultingPreview,
     tag: "OPS_CORE // STRAT_MAP",
     pillars: [
       "Funnel & tech stack audits",
