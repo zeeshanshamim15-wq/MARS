@@ -7,6 +7,10 @@ import automationPreview from "@/assets/automation-preview.jpg";
 import webdevPreview from "@/assets/webdev-preview.jpg";
 import vfxPreview from "@/assets/vfx-preview.jpg";
 import consultingPreview from "@/assets/consulting-preview.jpg";
+import caseGym from "@/assets/case-gym.jpg";
+import caseClinic from "@/assets/case-clinic.jpg";
+import caseRealestate from "@/assets/case-realestate.jpg";
+import caseSaas from "@/assets/case-saas.jpg";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Group } from "three";
@@ -73,7 +77,7 @@ const SECTOR_STUDIES = {
     benefits: ["2,380+ patient appointments verified", "97.1% booking success rate", "0% manual scheduling overhead"],
     quote: "MARS designed an automated voice scheduler that resolved our booking bottleneck in less than 30 days.",
     rep: "Dr. A. Sen, Operations Lead",
-    placeholder: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=600&q=80"
+    placeholder: caseClinic
   },
   gyms: {
     title: "Fitness & Wellness Chains",
@@ -82,7 +86,7 @@ const SECTOR_STUDIES = {
     benefits: ["1,090+ qualified leads generated", "97.3% contact verification rate", "Automatic membership enrollment paths"],
     quote: "Our front desk fatigue was completely eliminated. The calling bots qualified and booked members 24/7.",
     rep: "Founder, Peak Fitness",
-    placeholder: "https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=600&q=80"
+    placeholder: caseGym
   },
   realestate: {
     title: "Premium Real Estate",
@@ -91,7 +95,7 @@ const SECTOR_STUDIES = {
     benefits: ["4,110+ verified contacts synced", "95.1% accuracy in database matching", "Automatic follow-up campaigns over WhatsApp"],
     quote: "The CRM integrations were seamless. We received highly qualified leads directly on our dashboards.",
     rep: "VP of Sales, Apex Realty",
-    placeholder: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80"
+    placeholder: caseRealestate
   },
   saas: {
     title: "SaaS & Tech Platforms",
@@ -100,7 +104,7 @@ const SECTOR_STUDIES = {
     benefits: ["890+ technical tickets resolved", "97.7% satisfaction rating", "Database compliance under DPDP standards"],
     quote: "The RAG support system is exceptionally precise. It solved customer inquiries without escalating to developers.",
     rep: "CTO, CloudScale Inc.",
-    placeholder: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80"
+    placeholder: caseSaas
   }
 };
 
