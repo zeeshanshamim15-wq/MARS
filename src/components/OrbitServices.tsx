@@ -28,6 +28,7 @@ type Service = {
   accent: string;
   glowColor: string;
   path: string;
+  preview?: string;
 };
 
 const SERVICES: Service[] = [
@@ -604,11 +605,27 @@ export default function OrbitServices() {
                 style={{ backgroundColor: active.glowColor }}
               />
 
-              {/* Hero Image Area (Gradient Block with Large Service Icon) */}
-              {/* TODO: replace placeholder with real service image when available */}
-              <div className={`w-full h-60 sm:h-64 rounded-2xl bg-gradient-to-br ${active.accent} flex items-center justify-center relative overflow-hidden border border-white/5`}>
-                <div className="absolute inset-0 bg-black/10 backdrop-blur-[1px]" />
-                <active.icon className="h-14 w-14 sm:h-16 sm:w-16 text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] z-10" />
+              {/* Hero Image Area (Gradient Block or Real Preview Image) */}
+              <div className="w-full h-60 sm:h-64 rounded-2xl relative overflow-hidden border border-white/5 bg-zinc-950 flex items-center justify-center">
+                {active.preview ? (
+                  <>
+                    <img
+                      src={active.preview}
+                      alt={active.label}
+                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                    {/* Soft top-right icon badge when preview image is displayed */}
+                    <div className="absolute top-4 right-4 h-10 w-10 rounded-xl bg-black/40 border border-white/10 backdrop-blur-md flex items-center justify-center z-10">
+                      <active.icon className="h-5 w-5 text-white" />
+                    </div>
+                  </>
+                ) : (
+                  <div className={`absolute inset-0 bg-gradient-to-br ${active.accent} flex items-center justify-center`}>
+                    <div className="absolute inset-0 bg-black/10 backdrop-blur-[1px]" />
+                    <active.icon className="h-14 w-14 sm:h-16 sm:w-16 text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] z-10" />
+                  </div>
+                )}
               </div>
 
               {/* Title & Tagline */}
