@@ -74,7 +74,7 @@ export default function Hero3DZoom() {
   const w3Ref = useRef<HTMLDivElement>(null);
   const w4Ref = useRef<HTMLDivElement>(null);
 
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" ? window.innerWidth < 768 : false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -84,6 +84,24 @@ export default function Hero3DZoom() {
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
+
+  useEffect(() => {
+    if (isMobile) {
+      const dashboard = dashboardRef.current;
+      const w1 = w1Ref.current;
+      const w2 = w2Ref.current;
+      const w3 = w3Ref.current;
+      const w4 = w4Ref.current;
+      const t1 = t1Ref.current;
+      const t2 = t2Ref.current;
+      const t3 = t3Ref.current;
+      
+      const elements = [dashboard, w1, w2, w3, w4, t1, t2, t3].filter(Boolean);
+      if (elements.length > 0) {
+        gsap.set(elements, { clearProps: "all" });
+      }
+    }
+  }, [isMobile]);
 
   useEffect(() => {
     if (isMobile) return;
@@ -311,7 +329,7 @@ export default function Hero3DZoom() {
         <div 
           ref={containerRef}
           className={cn(
-            "relative w-full flex items-center justify-center min-h-[420px] sm:min-h-[500px] md:min-h-[550px]",
+            "relative w-full flex flex-col md:flex-row items-center justify-center min-h-[420px] sm:min-h-[500px] md:min-h-[550px] gap-6",
             !isMobile && "perspective-[1500px] preserve-3d"
           )}
         >

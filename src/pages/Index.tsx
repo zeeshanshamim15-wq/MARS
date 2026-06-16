@@ -236,7 +236,7 @@ function MarketTelemetryConsole() {
             {/* Right Side: Media / Graphics Container Placeholder */}
             <div className="lg:col-span-5 flex flex-col justify-center space-y-4">
               <MediaContainer
-                aspectRatio="4:5"
+                aspectRatio="16:9"
                 src={study.placeholder}
                 type="image"
                 title={`${study.title} Operations`}
