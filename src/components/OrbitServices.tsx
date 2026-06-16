@@ -14,6 +14,15 @@ import {
   ArrowRight
 } from "lucide-react";
 import marsLogo from "@/assets/mars-logo.png";
+import orbitWebdev from "@/assets/orbit-webdev.png";
+import orbitAutomation from "@/assets/orbit-automation.png";
+import orbitVfx from "@/assets/orbit-vfx.png";
+import orbitConsulting from "@/assets/orbit-consulting.png";
+import orbitInvestment from "@/assets/orbit-investment.png";
+import orbitSolutions from "@/assets/orbit-solutions.png";
+import orbitBrand from "@/assets/orbit-brand.png";
+import orbitLeadgen from "@/assets/orbit-leadgen.jpg";
+import orbitMarket from "@/assets/orbit-market.png";
 
 type Service = {
   id: string;
@@ -51,7 +60,8 @@ const SERVICES: Service[] = [
     tag: "DEV_CORE // SPEED_TEST",
     accent: "from-blue-400 to-indigo-500",
     glowColor: "rgba(59, 130, 246, 0.4)",
-    path: "/services/web-dev"
+    path: "/services/web-dev",
+    preview: orbitWebdev
   },
   {
     id: "automation",
@@ -72,7 +82,8 @@ const SERVICES: Service[] = [
     tag: "IA_CORE // PROTO_01",
     accent: "from-emerald-400 to-teal-500",
     glowColor: "rgba(16, 185, 129, 0.4)",
-    path: "/services/automation"
+    path: "/services/automation",
+    preview: orbitAutomation
   },
   {
     id: "filmmaking",
@@ -93,7 +104,8 @@ const SERVICES: Service[] = [
     tag: "VFX_CORE // GEN_MEDIA",
     accent: "from-purple-400 to-fuchsia-500",
     glowColor: "rgba(168, 85, 247, 0.4)",
-    path: "/services/filmmaking"
+    path: "/services/filmmaking",
+    preview: orbitVfx
   },
   {
     id: "consulting",
@@ -114,7 +126,8 @@ const SERVICES: Service[] = [
     tag: "OPS_CORE // STRAT_MAP",
     accent: "from-amber-400 to-orange-500",
     glowColor: "rgba(245, 158, 11, 0.4)",
-    path: "/services/consulting"
+    path: "/services/consulting",
+    preview: orbitConsulting
   },
   {
     id: "investment",
@@ -135,7 +148,8 @@ const SERVICES: Service[] = [
     tag: "STRAT_OPS // ROADMAP",
     accent: "from-rose-400 to-pink-500",
     glowColor: "rgba(244, 63, 94, 0.4)",
-    path: "/services/investment"
+    path: "/services/investment",
+    preview: orbitInvestment
   },
   {
     id: "ai-engineering",
@@ -157,7 +171,8 @@ const SERVICES: Service[] = [
     tag: "ENG_CORE // AI_SOLUTIONS",
     accent: "from-violet-400 to-purple-600",
     glowColor: "rgba(139, 92, 246, 0.4)",
-    path: "/services/ai-engineering"
+    path: "/services/ai-engineering",
+    preview: orbitSolutions
   },
   {
     id: "brand-design",
@@ -178,7 +193,8 @@ const SERVICES: Service[] = [
     tag: "CREATIVE_CORE // BRAND_DEV",
     accent: "from-fuchsia-400 to-pink-600",
     glowColor: "rgba(217, 70, 239, 0.4)",
-    path: "/services/brand-design"
+    path: "/services/brand-design",
+    preview: orbitBrand
   },
   {
     id: "lead-gen",
@@ -200,7 +216,8 @@ const SERVICES: Service[] = [
     tag: "OUTREACH_CORE // DIALER",
     accent: "from-cyan-400 to-blue-500",
     glowColor: "rgba(6, 182, 212, 0.4)",
-    path: "/services/lead-gen"
+    path: "/services/lead-gen",
+    preview: orbitLeadgen
   },
   {
     id: "market-analysis",
@@ -221,7 +238,8 @@ const SERVICES: Service[] = [
     tag: "INTEL_CORE // ANALYSIS",
     accent: "from-teal-400 to-emerald-600",
     glowColor: "rgba(20, 184, 166, 0.4)",
-    path: "/services/market-analysis"
+    path: "/services/market-analysis",
+    preview: orbitMarket
   }
 ];
 
