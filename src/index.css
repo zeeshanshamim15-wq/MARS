@@ -161,6 +161,22 @@
     width: 70%;
   }
 
+  /* Active State — bold, fully white, persistent glow and underline */
+  .mars-nav-link.active,
+  .mars-nav--scrolled .mars-nav-link.active {
+    font-weight: 700;
+    color: hsl(0 0% 100%);
+    letter-spacing: 0.02em;
+    text-shadow:
+      0 0 10px hsl(var(--nav-glow) / 0.55),
+      0 0 24px hsl(var(--nav-glow) / 0.25);
+  }
+
+  .mars-nav-link.active::after,
+  .mars-nav--scrolled .mars-nav-link.active::after {
+    width: 70%;
+  }
+
   /* Scrolled state — text shifts to luminous near-white with soft glow on hover */
   .mars-nav--scrolled .mars-nav-link {
     color: hsl(var(--nav-ink-scrolled));

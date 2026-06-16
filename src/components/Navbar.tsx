@@ -25,6 +25,13 @@ export const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 
+  const isActive = (to: string) => {
+    if (to === "/") {
+      return location.pathname === "/";
+    }
+    return location.pathname.startsWith(to);
+  };
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
     onScroll();
@@ -73,7 +80,10 @@ export const Navbar = () => {
                   <Link
                     to={item.to}
                     onClick={item.to === "/" ? handleHomeClick : undefined}
-                    className="mars-nav-link"
+                    className={cn(
+                      "mars-nav-link",
+                      isActive(item.to) && "active"
+                    )}
                   >
                     {item.label}
                   </Link>
@@ -108,7 +118,10 @@ export const Navbar = () => {
                 <li key={item.label}>
                   <Link 
                     to={item.to} 
-                    className="mars-nav-link"
+                    className={cn(
+                      "mars-nav-link",
+                      isActive(item.to) && "active"
+                    )}
                   >
                     {item.label}
                   </Link>
@@ -174,7 +187,10 @@ export const Navbar = () => {
                       handleHomeClick(e);
                     }
                   }}
-                  className="mars-nav-link block w-full rounded-none px-3 py-[0.5625rem]"
+                  className={cn(
+                    "mars-nav-link block w-full rounded-none px-3 py-[0.5625rem]",
+                    isActive(item.to) && "active"
+                  )}
                 >
                   {item.label}
                 </Link>
