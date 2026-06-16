@@ -276,6 +276,13 @@ export default function Hero3DZoom() {
           display: inline-block;
           filter: drop-shadow(0 0 12px rgba(52, 211, 153, 0.25));
         }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
       `}</style>
 
       {/* Background blueprint grid */}
@@ -287,18 +294,21 @@ export default function Hero3DZoom() {
         
         {/* MOBILE HEADLINE FALLBACK (Static arrangement for viewports < 768px) */}
         {isMobile ? (
-          <div className="max-w-md px-4 text-center space-y-3 mb-4">
+          <div className="max-w-md px-4 text-center space-y-8 py-10 mb-8">
             <p className="text-[9px] font-mono uppercase tracking-[0.45em] text-white/35">
               01 // CORE_INFRASTRUCTURE
             </p>
-            <h2 className="text-2xl font-light tracking-tight text-white leading-tight">
-              You focus on <span className="emerald-text-sweep font-bold">your business.</span>
+            <h2 className="text-3xl font-light tracking-tight text-white leading-tight">
+              You focus on <br className="block sm:hidden" />
+              <span className="emerald-text-sweep font-bold">your business.</span>
             </h2>
-            <h3 className="text-lg font-light text-white/80 leading-normal">
-              We build the <span className="emerald-text-sweep font-bold">invisible engine.</span>
+            <h3 className="text-xl font-light text-white/85 leading-normal">
+              We build the <br className="block sm:hidden" />
+              <span className="emerald-text-sweep font-bold">invisible engine.</span>
             </h3>
             <p className="text-[11px] font-mono text-white/40 tracking-wider">
-              AI, AUTOMATION & SYSTEMS. <span className="emerald-text-sweep font-bold">WORKING 24/7.</span>
+              AI, AUTOMATION & SYSTEMS. <br className="block sm:hidden" />
+              <span className="emerald-text-sweep font-bold">WORKING 24/7.</span>
             </p>
           </div>
         ) : (
@@ -434,130 +444,132 @@ export default function Hero3DZoom() {
                 </div>
               </div>
             </div>
+            
+            {/* PARALLAX FLOATING WIDGETS */}
+            <div className={cn(
+              isMobile ? "flex w-full overflow-x-auto snap-x snap-mandatory gap-4 pb-6 mt-6 hide-scrollbar px-6" : "contents"
+            )}>
+              {/* Widget 1: AI Call Bubble / Dialogue Script */}
+              <div
+                ref={w1Ref}
+                className={cn(
+                  "bg-black/85 border border-white/10 backdrop-blur-md p-3.5 rounded-xl text-left shadow-lg select-none",
+                  isMobile ? "relative shrink-0 snap-center min-w-[85%] mt-0 w-auto" : "absolute w-[220px] md:w-[250px] z-20 pointer-events-none will-change-transform"
+                )}
+              >
+                <div className="flex items-center justify-between border-b border-white/5 pb-2 mb-2 font-mono text-[7px] md:text-[9px]">
+                  <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    🟢 AI Voice Agent
+                  </span>
+                  <span className="text-white/35 font-light">Just now</span>
+                </div>
+                <p className="text-[8.5px] md:text-[10px] text-white/80 font-light leading-relaxed pl-1 border-l border-emerald-400/50">
+                  Call completed. Client qualified and consultation booked for tomorrow at 3 PM.
+                </p>
+                {/* Equalizer graphic */}
+                <div className="flex gap-0.5 h-2.5 items-end justify-end mt-2 px-1">
+                  <span className="w-0.5 bg-emerald-400/70 h-2 animate-pulse" />
+                  <span className="w-0.5 bg-emerald-400/90 h-3 animate-pulse" style={{ animationDelay: '0.2s' }} />
+                  <span className="w-0.5 bg-emerald-400/50 h-1.5 animate-pulse" style={{ animationDelay: '0.4s' }} />
+                  <span className="w-0.5 bg-emerald-400/80 h-3 animate-pulse" style={{ animationDelay: '0.1s' }} />
+                  <span className="w-0.5 bg-emerald-400/40 h-1 animate-pulse" />
+                </div>
+              </div>
+
+              {/* Widget 2: n8n workflow node connection */}
+              <div
+                ref={w2Ref}
+                className={cn(
+                  "bg-black/85 border border-white/10 backdrop-blur-md p-3.5 rounded-xl text-left shadow-lg font-mono select-none",
+                  isMobile ? "relative shrink-0 snap-center min-w-[85%] mt-0 w-auto" : "absolute w-[220px] md:w-[240px] z-20 pointer-events-none will-change-transform"
+                )}
+              >
+                <div className="text-[6.5px] md:text-[7px] text-white/35 tracking-wider mb-2 font-semibold">⚡ AUTOMATED FLOW</div>
+                <div className="flex items-center justify-between relative bg-white/[0.02] border border-white/5 p-2 rounded-lg font-mono">
+                  <span className="text-white/65 bg-white/5 border border-white/10 px-1.5 py-0.5 rounded text-[7px] md:text-[8px]">Meta Ad</span>
+                  <div className="h-[1px] flex-1 bg-emerald-400/40 mx-2 relative">
+                    <span className="absolute top-1/2 left-0 h-1 w-1 bg-emerald-400 rounded-full -translate-y-1/2 animate-ping" />
+                  </div>
+                  <span className="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded text-[7px] md:text-[8px] font-semibold">AI Assistant</span>
+                  <div className="h-[1px] flex-1 bg-emerald-400/40 mx-2 relative">
+                    <span className="absolute top-1/2 left-0 h-1 w-1 bg-emerald-400 rounded-full -translate-y-1/2 animate-ping" style={{ animationDelay: '0.5s' }} />
+                  </div>
+                  <span className="text-white/65 bg-white/5 border border-white/10 px-1.5 py-0.5 rounded text-[7px] md:text-[8px]">Calendar Booked</span>
+                </div>
+                <div className="flex justify-between items-center mt-2 px-0.5 text-[6.5px] md:text-[7px] text-white/30 font-mono">
+                  <span>STATUS: ACTIVE_PIPELINE</span>
+                  <span>FLOW_01</span>
+                </div>
+              </div>
+
+              {/* Widget 3: Lighthouse Speedometer dial */}
+              <div
+                ref={w3Ref}
+                className={cn(
+                  "bg-black/85 border border-white/10 backdrop-blur-md p-3 rounded-xl shadow-lg flex items-center gap-3.5 select-none",
+                  isMobile ? "relative shrink-0 snap-center min-w-[85%] mt-0 w-auto" : "absolute w-[160px] md:w-[185px] z-20 pointer-events-none will-change-transform"
+                )}
+              >
+                {/* SVG circle gauge */}
+                <div className="relative h-10 w-10 shrink-0">
+                  <svg className="h-full w-full" viewBox="0 0 36 36">
+                    <path
+                      className="text-white/5"
+                      strokeWidth="3"
+                      stroke="currentColor"
+                      fill="none"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <path
+                      className="text-emerald-400"
+                      strokeWidth="3"
+                      strokeDasharray="99, 100"
+                      strokeLinecap="round"
+                      stroke="currentColor"
+                      fill="none"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center font-mono text-[9.5px] md:text-[11px] font-bold text-white">
+                    99
+                  </div>
+                </div>
+                <div className="text-left font-mono">
+                  <span className="text-[6.5px] md:text-[7px] text-white/30 block uppercase tracking-wider">SEO_PERFORMANCE</span>
+                  <span className="text-[9px] md:text-[10px] text-white/80 block font-semibold">Lighthouse // OK</span>
+                </div>
+              </div>
+
+              {/* Widget 4: Active Log Stream console */}
+              <div
+                ref={w4Ref}
+                className={cn(
+                  "bg-black/85 border border-white/10 backdrop-blur-md p-4 rounded-xl text-left shadow-lg flex flex-col gap-2 select-none",
+                  isMobile ? "relative shrink-0 snap-center min-w-[85%] mt-0 w-auto" : "absolute w-[230px] md:w-[260px] z-20 pointer-events-none will-change-transform"
+                )}
+              >
+                <div className="flex justify-between items-center font-mono text-[7.5px] md:text-[9px] text-white/40 border-b border-white/5 pb-1.5 mb-1">
+                  <span>⚡ Live CRM Activity</span>
+                  <span className="text-emerald-400 font-semibold animate-pulse">ACTIVE</span>
+                </div>
+                <div className="flex flex-col gap-2 font-mono text-[8.5px] md:text-[10px] text-white/70">
+                  <div className="flex items-start gap-1.5 leading-normal">
+                    <span className="text-white/30 font-light shrink-0">[10:42 AM]</span>
+                    <span><span className="text-emerald-400 font-semibold">✅ New Lead</span> (Instagram) added to Pipeline.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5 leading-normal">
+                    <span className="text-white/30 font-light shrink-0">[10:45 AM]</span>
+                    <span><span className="text-emerald-400 font-semibold">💸 Invoice #1042</span> generated and sent.</span>
+                  </div>
+                  <div className="flex items-start gap-1.5 leading-normal">
+                    <span className="text-white/30 font-light shrink-0">[10:46 AM]</span>
+                    <span><span className="text-emerald-400 font-semibold">📨 Confirmation</span> email delivered.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-
-          {/* PARALLAX FLOATING WIDGETS */}
-
-          {/* Widget 1: AI Call Bubble / Dialogue Script */}
-          <div
-            ref={w1Ref}
-            className={cn(
-              "absolute bg-black/85 border border-white/10 backdrop-blur-md p-3.5 rounded-xl text-left w-[220px] md:w-[250px] shadow-lg select-none",
-              isMobile ? "relative inset-auto mt-4" : "z-20 pointer-events-none will-change-transform"
-            )}
-          >
-            <div className="flex items-center justify-between border-b border-white/5 pb-2 mb-2 font-mono text-[8px] md:text-[9px]">
-              <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                🟢 AI Voice Agent
-              </span>
-              <span className="text-white/35 font-light">Just now</span>
-            </div>
-            <p className="text-[9px] md:text-[10px] text-white/80 font-light leading-relaxed pl-1 border-l border-emerald-400/50">
-              Call completed. Client qualified and consultation booked for tomorrow at 3 PM.
-            </p>
-            {/* Equalizer graphic */}
-            <div className="flex gap-0.5 h-2.5 items-end justify-end mt-2 px-1">
-              <span className="w-0.5 bg-emerald-400/70 h-2 animate-pulse" />
-              <span className="w-0.5 bg-emerald-400/90 h-3 animate-pulse" style={{ animationDelay: '0.2s' }} />
-              <span className="w-0.5 bg-emerald-400/50 h-1.5 animate-pulse" style={{ animationDelay: '0.4s' }} />
-              <span className="w-0.5 bg-emerald-400/80 h-3 animate-pulse" style={{ animationDelay: '0.1s' }} />
-              <span className="w-0.5 bg-emerald-400/40 h-1 animate-pulse" />
-            </div>
-          </div>
-
-          {/* Widget 2: n8n workflow node connection */}
-          <div
-            ref={w2Ref}
-            className={cn(
-              "absolute bg-black/85 border border-white/10 backdrop-blur-md p-3.5 rounded-xl text-left w-[220px] md:w-[240px] shadow-lg font-mono text-[8px] md:text-[9px] select-none",
-              isMobile ? "relative inset-auto mt-4" : "z-20 pointer-events-none will-change-transform"
-            )}
-          >
-            <div className="text-[7px] text-white/35 tracking-wider mb-2 font-semibold">⚡ AUTOMATED FLOW</div>
-            <div className="flex items-center justify-between relative bg-white/[0.02] border border-white/5 p-2 rounded-lg font-mono">
-              <span className="text-white/65 bg-white/5 border border-white/10 px-1.5 py-0.5 rounded text-[8px]">Meta Ad</span>
-              <div className="h-[1px] flex-1 bg-emerald-400/40 mx-2 relative">
-                <span className="absolute top-1/2 left-0 h-1 w-1 bg-emerald-400 rounded-full -translate-y-1/2 animate-ping" />
-              </div>
-              <span className="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded text-[8px] font-semibold">AI Assistant</span>
-              <div className="h-[1px] flex-1 bg-emerald-400/40 mx-2 relative">
-                <span className="absolute top-1/2 left-0 h-1 w-1 bg-emerald-400 rounded-full -translate-y-1/2 animate-ping" style={{ animationDelay: '0.5s' }} />
-              </div>
-              <span className="text-white/65 bg-white/5 border border-white/10 px-1.5 py-0.5 rounded text-[8px]">Calendar Booked</span>
-            </div>
-            <div className="flex justify-between items-center mt-2 px-0.5 text-[7px] text-white/30 font-mono">
-              <span>STATUS: ACTIVE_PIPELINE</span>
-              <span>FLOW_01</span>
-            </div>
-          </div>
-
-          {/* Widget 3: Lighthouse Speedometer dial */}
-          <div
-            ref={w3Ref}
-            className={cn(
-              "absolute bg-black/85 border border-white/10 backdrop-blur-md p-3 rounded-xl shadow-lg flex items-center gap-3.5 w-[160px] md:w-[185px] select-none",
-              isMobile ? "relative inset-auto mt-4" : "z-20 pointer-events-none will-change-transform"
-            )}
-          >
-            {/* SVG circle gauge */}
-            <div className="relative h-10 w-10 shrink-0">
-              <svg className="h-full w-full" viewBox="0 0 36 36">
-                <path
-                  className="text-white/5"
-                  strokeWidth="3"
-                  stroke="currentColor"
-                  fill="none"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-                <path
-                  className="text-emerald-400"
-                  strokeWidth="3"
-                  strokeDasharray="99, 100"
-                  strokeLinecap="round"
-                  stroke="currentColor"
-                  fill="none"
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center font-mono text-[10px] md:text-[11px] font-bold text-white">
-                99
-              </div>
-            </div>
-            <div className="text-left font-mono">
-              <span className="text-[7px] text-white/30 block uppercase tracking-wider">SEO_PERFORMANCE</span>
-              <span className="text-[10px] text-white/80 block font-semibold">Lighthouse // OK</span>
-            </div>
-          </div>
-
-          {/* Widget 4: Active Log Stream console */}
-          <div
-            ref={w4Ref}
-            className={cn(
-              "absolute bg-black/85 border border-white/10 backdrop-blur-md p-4 rounded-xl text-left w-[230px] md:w-[260px] shadow-lg flex flex-col gap-2 select-none",
-              isMobile ? "relative inset-auto mt-4" : "z-20 pointer-events-none will-change-transform"
-            )}
-          >
-            <div className="flex justify-between items-center font-mono text-[8px] md:text-[9px] text-white/40 border-b border-white/5 pb-1.5 mb-1">
-              <span>⚡ Live CRM Activity</span>
-              <span className="text-emerald-400 font-semibold animate-pulse">ACTIVE</span>
-            </div>
-            <div className="flex flex-col gap-2 font-mono text-[9px] md:text-[10px] text-white/70">
-              <div className="flex items-start gap-1.5 leading-normal">
-                <span className="text-white/30 font-light shrink-0">[10:42 AM]</span>
-                <span><span className="text-emerald-400 font-semibold">✅ New Lead</span> (Instagram) added to Pipeline.</span>
-              </div>
-              <div className="flex items-start gap-1.5 leading-normal">
-                <span className="text-white/30 font-light shrink-0">[10:45 AM]</span>
-                <span><span className="text-emerald-400 font-semibold">💸 Invoice #1042</span> generated and sent.</span>
-              </div>
-              <div className="flex items-start gap-1.5 leading-normal">
-                <span className="text-white/30 font-light shrink-0">[10:46 AM]</span>
-                <span><span className="text-emerald-400 font-semibold">📨 Confirmation</span> email delivered.</span>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
     </section>
