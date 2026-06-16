@@ -15,8 +15,7 @@ const COMPANY = [
   { label: "Our Clients", to: "/clients" },
   { label: "Process", to: "/process" },
   { label: "About", to: "/about" },
-  { label: "Pricing", to: "/pricing" },
-  { label: "System Logs", to: "/logs" }
+  { label: "Pricing", to: "/pricing" }
 ];
 
 const LEGAL = [

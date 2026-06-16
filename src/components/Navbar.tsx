@@ -11,7 +11,6 @@ const LEFT_ITEMS: NavItem[] = [
   { label: "Services", to: "/services" },
   { label: "Clients", to: "/clients" },
   { label: "Pricing", to: "/pricing" },
-  { label: "Logs", to: "/logs" },
 ];
 
 const RIGHT_ITEMS: NavItem[] = [

@@ -18,7 +18,6 @@ const Pricing = lazy(() => import("./pages/Pricing.tsx"));
 const Privacy = lazy(() => import("./pages/Privacy.tsx"));
 const Terms = lazy(() => import("./pages/Terms.tsx"));
 const Contact = lazy(() => import("./pages/Contact.tsx"));
-const Logs = lazy(() => import("./pages/Logs.tsx"));
 const ProjectDetails = lazy(() => import("./pages/ProjectDetails.tsx"));
 const ServiceDetails = lazy(() => import("./pages/ServiceDetails.tsx"));
 const Clients = lazy(() => import("./pages/Clients.tsx"));
@@ -50,7 +49,6 @@ const App = () => (
             <Route path="/pricing/:serviceId" element={<PricingDetail />} />
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/logs" element={<Logs />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
