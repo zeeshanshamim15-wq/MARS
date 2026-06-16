@@ -134,25 +134,25 @@ export default function Hero3DZoom() {
       scrollTrigger: {
         trigger: section,
         start: "top top",
-        end: "+=260%",
+        end: "+=420%", // Increased scroll travel to slow down transitions
         pin: true,
-        scrub: 1,
+        scrub: 1.2, // Smoother deceleration cushion
         anticipatePin: 1,
       },
     });
 
     // ── NARRATIVE SCROLL-TELLING TIMELINE ──
 
-    // Text 1: Fades in and out (0.00 -> 0.28)
-    tl.to(t1, { opacity: 1, y: 0, duration: 0.12, ease: "power2.out" }, 0.02);
-    tl.to(t1, { opacity: 0, y: -15, duration: 0.12, ease: "power2.in" }, 0.26);
+    // Text 1: Fades in quickly, stays longer, then fades out
+    tl.to(t1, { opacity: 1, y: 0, duration: 0.15, ease: "power2.out" }, 0.02);
+    tl.to(t1, { opacity: 0, y: -15, duration: 0.15, ease: "power2.in" }, 0.28);
 
-    // Text 2: Fades in and out (0.32 -> 0.60)
-    tl.to(t2, { opacity: 1, y: 0, duration: 0.12, ease: "power2.out" }, 0.34);
-    tl.to(t2, { opacity: 0, y: -15, duration: 0.12, ease: "power2.in" }, 0.58);
+    // Text 2: Fades in quickly, stays longer, then fades out
+    tl.to(t2, { opacity: 1, y: 0, duration: 0.15, ease: "power2.out" }, 0.40);
+    tl.to(t2, { opacity: 0, y: -15, duration: 0.15, ease: "power2.in" }, 0.66);
 
-    // Text 3: Fades in and stays (0.64 -> 1.00)
-    tl.to(t3, { opacity: 1, y: 0, duration: 0.15, ease: "power2.out" }, 0.68);
+    // Text 3: Fades in and stays
+    tl.to(t3, { opacity: 1, y: 0, duration: 0.18, ease: "power2.out" }, 0.78);
 
 
     // ── DASHBOARD ZOOM & PERSPECTIVE TIMELINE ──
@@ -169,9 +169,9 @@ export default function Hero3DZoom() {
     // Dashboard fades in to full focus right around the Text 3 transition
     tl.to(dashboard, {
       opacity: 1,
-      duration: 0.45,
+      duration: 0.3,
       ease: "power2.out",
-    }, 0.52);
+    }, 0.68);
 
 
     // ── PARALLAX WIDGETS TIMELINE (Staggered fade-in along with dashboard) ──
@@ -183,10 +183,10 @@ export default function Hero3DZoom() {
       xPercent: -45,
       yPercent: -28,
       z: 80,
-      duration: 0.45,
+      duration: 0.28,
       ease: "power2.out",
       force3D: true,
-    }, 0.52);
+    }, 0.70);
 
     // Widget 2: n8n automation connector - Drifts up & right
     tl.to(w2, {
@@ -195,10 +195,10 @@ export default function Hero3DZoom() {
       xPercent: 45,
       yPercent: -35,
       z: 100,
-      duration: 0.45,
+      duration: 0.28,
       ease: "power2.out",
       force3D: true,
-    }, 0.55);
+    }, 0.73);
 
     // Widget 3: Lighthouse dial - Drifts down & left
     tl.to(w3, {
@@ -207,10 +207,10 @@ export default function Hero3DZoom() {
       xPercent: -55,
       yPercent: 30,
       z: 60,
-      duration: 0.45,
+      duration: 0.28,
       ease: "power2.out",
       force3D: true,
-    }, 0.60);
+    }, 0.78);
 
     // Widget 4: Terminal console - Drifts down & right
     tl.to(w4, {
@@ -219,10 +219,10 @@ export default function Hero3DZoom() {
       xPercent: 55,
       yPercent: 25,
       z: 90,
-      duration: 0.45,
+      duration: 0.28,
       ease: "power2.out",
       force3D: true,
-    }, 0.57);
+    }, 0.75);
 
     return () => {
       ScrollTrigger.getAll()
