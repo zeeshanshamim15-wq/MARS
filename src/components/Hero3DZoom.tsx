@@ -444,8 +444,9 @@ export default function Hero3DZoom() {
                 </div>
               </div>
             </div>
-            
-            {/* PARALLAX FLOATING WIDGETS */}
+          </div>
+          
+          {/* PARALLAX FLOATING WIDGETS */}
             <div className={cn(
               isMobile ? "flex w-full overflow-x-auto snap-x snap-mandatory gap-4 pb-6 mt-6 hide-scrollbar px-6" : "contents"
             )}>
@@ -566,7 +567,6 @@ export default function Hero3DZoom() {
                     <span className="text-white/30 font-light shrink-0">[10:46 AM]</span>
                     <span><span className="text-emerald-400 font-semibold">📨 Confirmation</span> email delivered.</span>
                   </div>
-                </div>
               </div>
             </div>
           </div>
