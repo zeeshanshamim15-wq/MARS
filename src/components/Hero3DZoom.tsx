@@ -274,10 +274,10 @@ export default function Hero3DZoom() {
               01 // CORE_INFRASTRUCTURE
             </p>
             <h2 className="text-2xl font-light tracking-tight text-white leading-tight">
-              You focus on <span className="metallic-text-sweep font-bold">your business.</span>
+              You focus on <span className="emerald-text-sweep font-bold">your business.</span>
             </h2>
             <h3 className="text-lg font-light text-white/80 leading-normal">
-              We build the <span className="metallic-text-sweep font-bold">invisible engine.</span>
+              We build the <span className="emerald-text-sweep font-bold">invisible engine.</span>
             </h3>
             <p className="text-[11px] font-mono text-white/40 tracking-wider">
               AI, AUTOMATION & SYSTEMS. <span className="emerald-text-sweep font-bold">WORKING 24/7.</span>
@@ -290,13 +290,13 @@ export default function Hero3DZoom() {
               ref={t1Ref} 
               className="absolute text-3xl md:text-5xl font-light tracking-tight text-white/95 leading-snug drop-shadow-md select-none"
             >
-              You focus on <span className="metallic-text-sweep font-bold">your business.</span>
+              You focus on <span className="emerald-text-sweep font-bold">your business.</span>
             </div>
             <div 
               ref={t2Ref} 
               className="absolute text-3xl md:text-5xl font-light tracking-tight text-white/95 leading-snug drop-shadow-md select-none"
             >
-              We build the <span className="metallic-text-sweep font-bold">invisible engine.</span>
+              We build the <span className="emerald-text-sweep font-bold">invisible engine.</span>
             </div>
             <div 
               ref={t3Ref} 
