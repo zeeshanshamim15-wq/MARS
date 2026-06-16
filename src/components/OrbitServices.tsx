@@ -460,7 +460,7 @@ export default function OrbitServices() {
           <motion.div
             animate={{ scale: [1, 1.03, 1] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="relative z-10 flex h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 flex-col items-center justify-center rounded-full bg-black/80 border border-white/10 backdrop-blur-xl transition-shadow duration-700 pointer-events-none"
+            className="relative z-10 flex h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 flex-col items-center justify-center rounded-full bg-transparent border border-white/10 backdrop-blur-xl transition-shadow duration-700 pointer-events-none"
             style={{
               boxShadow: `0 0 50px ${active.glowColor}`
             }}
