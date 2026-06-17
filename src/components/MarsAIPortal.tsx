@@ -407,8 +407,7 @@ export default function MarsAIPortal() {
       ref={portalRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      onClick={handleRedirect}
-      className="relative flex flex-col items-center justify-center px-6 py-24 text-white border-t border-b border-white/5 overflow-hidden cursor-pointer select-none bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.02)_0%,rgba(0,0,0,0)_70%)]"
+      className="relative flex flex-col items-center justify-center px-6 py-24 text-white border-t border-b border-white/5 overflow-hidden select-none bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.02)_0%,rgba(0,0,0,0)_70%)]"
     >
       {/* Cinematic Pulsing Neon Glow */}
       <div
