@@ -301,25 +301,25 @@ export default function MarsAIPortal() {
 
       // Scene 1: The BGMI Peek
       timeline.set(mascot, { opacity: 1, autoAlpha: 1, x: startX, y: startY, scale: 1, scaleX: 1, scaleY: 1, rotation: 0, rotationZ: 0, zIndex: 0, transformOrigin: "bottom center" })
-        .to(mascot, { x: startX + 40, duration: 0.6, ease: "power3.out" }) // translate X to startX + 40 (visibly emerges)
-        .to(mascot, {}, "+=1.0") // Pause for exactly 1 second
-        .to(mascot, { x: startX, duration: 0.2, ease: "power4.in" }); // Snap back to startX to hide
+        .to(mascot, { x: startX + 40, duration: 1.0, ease: "power3.out" }) // duration: 1 to slide out
+        .to(mascot, {}, "+=2.0") // explicit 2-second pause before it slides back in
+        .to(mascot, { x: startX, duration: 0.2, ease: "power4.in" }); // slides back in to startX
 
       // Scene 2: The Muscle-Up
       timeline.set(mascot, { zIndex: 50, x: walkStartX, y: walkStartY + 30, rotation: -15, rotationZ: -15, transformOrigin: "bottom left" }) // Teleport slightly lower with -15deg tilt
-        .to(mascot, { y: walkStartY, rotation: 0, rotationZ: 0, duration: 0.6, ease: "power2.out" }); // Pull body up onto edge (y and rotation to 0)
+        .to(mascot, { y: walkStartY, rotation: 0, rotationZ: 0, duration: 1.0, ease: "power2.out" }); // Slowly pull body up over 1 second
 
       // Scene 3: The Balance Walk
       timeline.call(() => {
           // Rapid but subtle rotation wobble to simulate struggling for balance
           gsap.fromTo(mascot, 
             { rotation: -5, rotationZ: -5 },
-            { rotation: 5, rotationZ: 5, duration: 0.15, yoyo: true, repeat: 19, ease: "sine.inOut" }
+            { rotation: 5, rotationZ: 5, duration: 0.15, yoyo: true, repeat: 25, ease: "sine.inOut" }
           );
         })
         .to(mascot, {
           x: walkEndX,
-          duration: 3.0,
+          duration: 4.0, // Slow and cautious walk over 4 seconds
           ease: "none"
         })
         .set(mascot, { rotation: 0, rotationZ: 0 }); // Reset rotation
@@ -327,19 +327,19 @@ export default function MarsAIPortal() {
       // Scene 4: The Parkour Leap & Hang
       timeline.to(mascot, {
         x: hangX,
-        duration: 1.0,
+        duration: 1.5,
         ease: "power1.inOut"
       }, "leap")
       .to(mascot, {
-        y: hangY - 80, // Parabolic peak height
-        duration: 0.5,
-        ease: "power1.out"
+        y: hangY - 100, // Parabolic peak height (upwards against gravity)
+        duration: 0.75,
+        ease: "power2.out"
       }, "leap")
       .to(mascot, {
         y: hangY,
-        duration: 0.5,
-        ease: "power1.in"
-      }, "leap+=0.5")
+        duration: 0.75,
+        ease: "power2.in" // Falling back down to hang target
+      }, "leap+=0.75")
       .call(() => {
         gsap.set(mascot, { transformOrigin: "top center" });
       })
