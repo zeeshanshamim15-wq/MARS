@@ -232,15 +232,13 @@ export default function MarsAIPortal() {
       const getPositionCoords = (el: HTMLElement) => {
         const elRect = el.getBoundingClientRect();
         const portalRect = portal.getBoundingClientRect();
-        
         const style = window.getComputedStyle(portal);
-        const paddingLeft = parseFloat(style.paddingLeft) || 0;
-        const paddingTop = parseFloat(style.paddingTop) || 0;
         const borderLeft = parseFloat(style.borderLeftWidth) || 0;
         const borderTop = parseFloat(style.borderTopWidth) || 0;
         
-        const originX = portalRect.left + borderLeft + paddingLeft;
-        const originY = portalRect.top + borderTop + paddingTop;
+        // DO NOT SUBTRACT PADDING. absolute anchors to the padding-box edge.
+        const originX = portalRect.left + borderLeft;
+        const originY = portalRect.top + borderTop;
         
         return {
           left: elRect.left - originX,
@@ -252,11 +250,19 @@ export default function MarsAIPortal() {
         };
       };
 
+      // Temporarily force the phone to its final resting state to get true coordinates
+      const currentPhoneY = gsap.getProperty(phone, "y");
+      gsap.set(phone, { y: 0 });
+
+      // Extract true coordinates
       const phoneCoords = getPositionCoords(phone);
       const headingCoords = getPositionCoords(heading);
       const buttonCoords = getPositionCoords(ctaBtn);
-      const mascotWidth = mascot.offsetWidth;
-      const mascotHeight = mascot.offsetHeight;
+      const mascotWidth = mascot.offsetWidth || 64; // Fallback to 64px if unrendered
+      const mascotHeight = mascot.offsetHeight || 64; // Fallback to 64px if unrendered
+
+      // Restore the phone back to whatever its ScrollTrigger state currently is
+      gsap.set(phone, { y: currentPhoneY });
 
       // 1. Starting hidden coords (behind middle-right edge of phone)
       // Sits directly on the boundary (completely hidden behind the right edge of the phone)
@@ -275,6 +281,8 @@ export default function MarsAIPortal() {
       // 4. Land target (Access Console button)
       const landX = buttonCoords.left + buttonCoords.width / 2 - mascotWidth / 2;
       const landY = buttonCoords.top - mascotHeight; // exact top of the button
+
+      const peakY = Math.min(walkStartY, hangY) - 140; // Force an arc 140px higher than the highest element
 
       // Force initial GSAP state immediately before animations begin
       gsap.set(mascot, { opacity: 1, autoAlpha: 1, x: startX, y: startY, scale: 1, scaleX: 1, scaleY: 1, rotation: 0, rotationZ: 0 });
@@ -326,21 +334,9 @@ export default function MarsAIPortal() {
         .set(mascot, { rotation: 0, rotationZ: 0 }); // Reset rotation
 
       // Scene 4: The Parkour Leap & Hang
-      timeline.to(mascot, {
-        x: hangX,
-        duration: 1.5,
-        ease: "power1.inOut"
-      }, "leap")
-      .to(mascot, {
-        y: hangY - 100, // Parabolic peak height (upwards against gravity)
-        duration: 0.75,
-        ease: "power2.out"
-      }, "leap")
-      .to(mascot, {
-        y: hangY,
-        duration: 0.75,
-        ease: "power2.in" // Falling back down to hang target
-      }, "leap+=0.75")
+      timeline.to(mascot, { x: hangX, duration: 1.5, ease: "power1.inOut" }, "leap")
+        .to(mascot, { y: peakY, duration: 0.75, ease: "power2.out" }, "leap") // Fly up to the true peak
+        .to(mascot, { y: hangY, duration: 0.75, ease: "power2.in" }, "leap+=0.75")
       .call(() => {
         gsap.set(mascot, { transformOrigin: "top center" });
       })
@@ -376,27 +372,27 @@ export default function MarsAIPortal() {
       .to(mascot, { scaleY: 0.5, scaleX: 1.4, duration: 0.08, ease: "power1.out" }) // heavy squash
       .to(mascot, { scaleY: 1, scaleX: 1, duration: 0.5, ease: "power2.out" }); // slowly stand back up (0.5s stretch back)
 
-      // Scene 6: The Wave & Tap
-      timeline.to(mascot, { rotation: 12, rotationZ: 12, duration: 0.15, ease: "power1.inOut" }) // Waving back/forth twice
-        .to(mascot, { rotation: -12, rotationZ: -12, duration: 0.15, yoyo: true, repeat: 3, ease: "power1.inOut" })
-        .to(mascot, { rotation: 0, rotationZ: 0, duration: 0.15, ease: "power1.out" })
-        .to(mascot, {
-          x: "+=10",
-          rotation: 15,
-          rotationZ: 15,
-          duration: 0.2,
-          yoyo: true,
-          repeat: 1,
-          ease: "power1.inOut"
-        }); // Quick forward tilt and right shift tap
+      // Scene 6: The Friendly Wave & Deliberate Tap
+      timeline.to(mascot, { rotation: 15, duration: 0.3, ease: "power1.inOut" }) // Wave right
+        .to(mascot, { rotation: -15, duration: 0.3, yoyo: true, repeat: 3, ease: "power1.inOut" }) // Friendly slow wave
+        .to(mascot, { rotation: 0, duration: 0.3, ease: "power1.out" }) // Back to center
+        // The TAP: Lean forward, shift right, and push down slightly
+        .to(mascot, { rotation: 25, x: "+=15", y: "+=10", duration: 0.5, ease: "power2.inOut" }) 
+        // Hold the tap for a split second, then release back to center
+        .to(mascot, { rotation: 0, x: "-=15", y: "-=10", duration: 0.4, ease: "back.out(1.5)" }, "+=0.2"); 
 
-      // Scene 7: The Console Hide (Loop Reset)
-      timeline.to(mascot, { y: "+=30", opacity: 0, autoAlpha: 0, duration: 0.5, ease: "power2.in" }) // Hide inside button
-        .set(mascot, { x: startX, y: startY, opacity: 0, autoAlpha: 0, scale: 1, scaleX: 1, scaleY: 1, rotation: 0, rotationZ: 0, zIndex: 0, transformOrigin: "bottom center" }); // Reset to initial hiding spot
+      // Scene 7: The 'Tata' (Goodbye) & Console Hide
+      timeline.to(mascot, { rotation: 10, duration: 0.15, yoyo: true, repeat: 3 }, "+=0.3") // Quick goodbye wiggle
+        // SINK DOWN: Move y down by 70px to fully sink behind/under the console button before fading
+        .to(mascot, { y: "+=70", opacity: 0, autoAlpha: 0, duration: 1.0, ease: "power2.in" }) 
+        // EXACTLY 1.0 SECOND DELAY: Blank tween to pause before the timeline loops back to the Peek
+        .to({}, { duration: 1.0 }) 
+        // Final Reset for the next loop
+        .set(mascot, { x: startX, y: startY, opacity: 0, autoAlpha: 0, scale: 1, scaleX: 1, scaleY: 1, rotation: 0, rotationZ: 0, zIndex: 0, transformOrigin: "bottom center" });
     };
 
     // Tiny timeout on mount to ensure correct coordinates from bounding client rects
-    const timer = setTimeout(buildTimeline, 600);
+    const timer = setTimeout(buildTimeline, 1600);
 
     window.addEventListener("resize", buildTimeline);
     return () => {
