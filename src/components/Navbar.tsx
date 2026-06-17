@@ -1,3 +1,4 @@
+// MARS Navbar — active route highlighting + transparent orbit
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
