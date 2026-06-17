@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useRef, useState, useMemo, useCallback, memo
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import MarsAIPortal from "@/components/MarsAIPortal";
 import ParallaxBackground from "@/components/ParallaxBackground";
 import automationPreview from "@/assets/automation-preview.jpg";
 import webdevPreview from "@/assets/webdev-preview.jpg";
@@ -121,38 +122,7 @@ function MarketTelemetryConsole() {
     >
       <div className="mx-auto max-w-6xl w-full space-y-20">
         
-        {/* 1. Live Test Drive Gateway Card */}
-        <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-gradient-to-r from-emerald-950/20 via-zinc-950/40 to-blue-950/20 p-8 sm:p-12 md:p-16 backdrop-blur-xl shadow-2xl flex flex-col md:flex-row gap-8 items-center justify-between">
-          {/* Decorative ambient background glows */}
-          <div className="absolute top-0 right-1/4 h-[300px] w-[300px] bg-emerald-500/5 rounded-full filter blur-[100px] pointer-events-none" />
-          <div className="absolute bottom-0 left-1/4 h-[300px] w-[300px] bg-blue-500/5 rounded-full filter blur-[100px] pointer-events-none" />
-          
-          <div className="space-y-4 max-w-2xl text-center md:text-left">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-[10px] sm:text-xs text-white/60 tracking-wider w-fit">
-              <Bot className="h-3.5 w-3.5 text-white animate-pulse" />
-              Interactive Live Console
-            </div>
-            <h3 className="text-3xl sm:text-4xl font-light tracking-tight text-white leading-tight">
-              Experience Our <span className="font-semibold text-emerald-400 animate-pulse">Autonomous Agents</span> Live
-            </h3>
-            <p className="text-sm leading-relaxed text-white/60">
-              We have deployed our flagship voice and ledger systems in a live sandbox environment. Talk to <strong className="text-white/80">Abdul the AI Accountant</strong>, trigger real expense reconciliation, and see how our integrations work first-hand.
-            </p>
-          </div>
 
-          <div className="shrink-0">
-            <a
-              ref={aiConsoleRef as any}
-              href="https://mars-ai-web.onrender.com/start"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="magnetic-btn inline-flex h-14 items-center justify-center rounded-2xl bg-white px-8 text-sm font-semibold text-black shadow-xl hover:shadow-white/5 group gap-2"
-            >
-              <span>Access AI Console</span>
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </a>
-          </div>
-        </div>
 
         {/* 2. Sector-Specific Case Studies */}
         <div className="space-y-12">
@@ -628,6 +598,9 @@ export default function Index() {
         <Suspense fallback={null}>
           <Hero3DZoom />
         </Suspense>
+
+        {/* Standalone Holographic AI Portal section */}
+        <MarsAIPortal />
 
         {/* REDESIGNED: Bento Grid Active Verticals */}
         <section
