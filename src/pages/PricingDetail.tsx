@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParallaxBackground from "@/components/ParallaxBackground";
+import MeetingBookingModal from "@/components/MeetingBookingModal";
 import { 
   ArrowLeft, 
   Check, 
@@ -892,6 +893,7 @@ export default function PricingDetail() {
   const [activePlan, setActivePlan] = useState(0);
   const [activeAddon, setActiveAddon] = useState(0);
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
+  const [meetingOpen, setMeetingOpen] = useState(false);
 
   useEffect(() => {
     if (currentService) {
@@ -1129,7 +1131,10 @@ export default function PricingDetail() {
                     )}
 
                     <Link
-                      to={`/onboarding?service=${currentService.id}&package=${allSelected ? "bundle" : "custom"}`}
+                      to={currentService.id === "automation"
+                        ? `/onboarding?service=${currentService.id}&package=${allSelected ? "bundle" : "custom"}`
+                        : `/checkout/${currentService.id}?package=${allSelected ? "bundle" : "custom"}&modules=${selectedIndices.join(",")}`
+                      }
                       className="w-full py-3 bg-white text-black hover:scale-[1.02] active:scale-[0.98] rounded-xl text-xs font-semibold transition flex items-center justify-center font-mono tracking-wider"
                     >
                       Hire MARS for this Build
@@ -1474,13 +1479,33 @@ export default function PricingDetail() {
           </div>
           
           <Link
-            to={`/onboarding?service=${currentService.id}&package=${allSelected ? "bundle" : "custom"}`}
+            to={currentService.id === "automation"
+              ? `/onboarding?service=${currentService.id}&package=${allSelected ? "bundle" : "custom"}`
+              : `/checkout/${currentService.id}?package=${allSelected ? "bundle" : "custom"}&modules=${selectedIndices.join(",")}`
+            }
             className="px-4 py-2 bg-white text-black font-semibold rounded-lg text-xs font-mono tracking-wider transition cursor-pointer"
           >
             Hire MARS
           </Link>
         </div>
       )}
+
+      {/* Meeting CTA */}
+      <div className="text-center py-12">
+        <p className="text-white/30 text-sm mb-2">Wanna know more about this service?</p>
+        <button
+          onClick={() => setMeetingOpen(true)}
+          className="text-emerald-400 text-sm font-medium hover:text-emerald-300 underline underline-offset-4 transition cursor-pointer"
+        >
+          Book a meeting with us →
+        </button>
+      </div>
+
+      <MeetingBookingModal
+        isOpen={meetingOpen}
+        onClose={() => setMeetingOpen(false)}
+        serviceName={currentService?.name}
+      />
 
       <Footer />
     </div>

@@ -24,6 +24,7 @@ const Clients = lazy(() => import("./pages/Clients.tsx"));
 const ClientDetails = lazy(() => import("./pages/ClientDetails.tsx"));
 const Onboarding = lazy(() => import("./pages/Onboarding.tsx"));
 const PricingDetail = lazy(() => import("./pages/PricingDetail.tsx"));
+const ServiceCheckout = lazy(() => import("./pages/ServiceCheckout.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/process" element={<Process />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/pricing/:serviceId" element={<PricingDetail />} />
+            <Route path="/checkout/:serviceId" element={<ServiceCheckout />} />
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/privacy" element={<Privacy />} />

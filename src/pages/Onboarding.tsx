@@ -6,6 +6,7 @@ import ParallaxBackground from "@/components/ParallaxBackground";
 import BorderLaserCard from "@/components/ui/BorderLaserCard";
 import WordReveal from "@/components/ui/WordReveal";
 import MetallicText from "@/components/ui/MetallicText";
+import MeetingBookingModal from "@/components/MeetingBookingModal";
 import {
   Check,
   ArrowRight,
@@ -58,6 +59,7 @@ export default function Onboarding() {
   
   // Form fields
   const [selectedPlan, setSelectedPlan] = useState<PlanKey>(initialPlan);
+  const [meetingOpen, setMeetingOpen] = useState(false);
   const [accountType, setAccountType] = useState<"business" | "personal">("business");
   const [businessName, setBusinessName] = useState("");
   const [ownerName, setOwnerName] = useState("");
@@ -390,6 +392,15 @@ export default function Onboarding() {
                 {(Object.keys(PLANS) as PlanKey[]).map((key) => {
                   const plan = PLANS[key];
                   const isSelected = selectedPlan === key;
+
+                  // Upsell messaging
+                  const upsellMsg = (() => {
+                    if (isSelected && key === "intern") return "⚡ Upgrade to Pro for 2.5× more credits & priority support";
+                    if (!isSelected && key === "pro") return "🔥 Most Popular — 40K credits, CA-grade accuracy, 3× faster";
+                    if (!isSelected && key === "max") return "🏢 Enterprise — Dedicated manager, unlimited workflows, SLA";
+                    return null;
+                  })();
+
                   return (
                     <BorderLaserCard
                       key={key}
@@ -416,11 +427,28 @@ export default function Onboarding() {
                           <span className="text-xs text-white/40">/ month</span>
                         </div>
                         <p className="text-[10px] font-semibold text-emerald-400/90 tracking-wide uppercase mb-4">{plan.credits}</p>
-                        <p className="text-xs text-white/50 leading-relaxed mb-6">{plan.desc}</p>
+                        <p className="text-xs text-white/50 leading-relaxed mb-3">{plan.desc}</p>
+
+                        {/* Upsell banner */}
+                        {upsellMsg && (
+                          <div className={`mb-4 px-3 py-2 rounded-lg text-[10px] font-medium leading-snug ${
+                            isSelected && key === "intern"
+                              ? "bg-amber-500/10 border border-amber-500/20 text-amber-400"
+                              : key === "pro"
+                              ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"
+                              : "bg-violet-500/10 border border-violet-500/20 text-violet-400"
+                          }`}>
+                            {upsellMsg}
+                          </div>
+                        )}
                       </div>
 
                       <button
-                        className={`w-full py-2.5 rounded-xl text-xs font-semibold transition z-20 relative flex items-center justify-center ${
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedPlan(key);
+                        }}
+                        className={`w-full py-2.5 rounded-xl text-xs font-semibold transition z-20 relative flex items-center justify-center cursor-pointer ${
                           isSelected
                             ? "bg-emerald-500 text-black shadow-lg"
                             : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
@@ -1161,6 +1189,23 @@ export default function Onboarding() {
           </div>
         </div>
       )}
+
+      {/* Meeting CTA */}
+      <div className="text-center py-12">
+        <p className="text-white/30 text-sm mb-2">Wanna know more about this service?</p>
+        <button
+          onClick={() => setMeetingOpen(true)}
+          className="text-emerald-400 text-sm font-medium hover:text-emerald-300 underline underline-offset-4 transition cursor-pointer"
+        >
+          Book a meeting with us →
+        </button>
+      </div>
+
+      <MeetingBookingModal
+        isOpen={meetingOpen}
+        onClose={() => setMeetingOpen(false)}
+        serviceName="Intelligent Automation"
+      />
 
       <Footer />
     </div>
