@@ -36,7 +36,6 @@ export default function MarsAIPortal() {
   
   // Mascot tracking refs
   const headingRef = useRef<HTMLSpanElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
   const mascotRef = useRef<HTMLDivElement>(null);
   const mascotImgRef = useRef<HTMLDivElement>(null);
 
@@ -221,11 +220,13 @@ export default function MarsAIPortal() {
       const portal = portalRef.current;
       const phone = phoneRef.current;
       const heading = headingRef.current;
-      const button = buttonRef.current;
       const mascot = mascotRef.current;
       const mascotImg = mascotImgRef.current;
 
-      if (!portal || !phone || !heading || !button || !mascot || !mascotImg) return;
+      if (!portal || !phone || !heading || !mascot || !mascotImg) return;
+
+      const ctaBtn = document.getElementById('mars-cta-button');
+      if (!ctaBtn) return;
 
       // Coordinates translation relative to the portal's padding box top-left corner (accounts for padding/borders & window scroll)
       const getPositionCoords = (el: HTMLElement) => {
@@ -253,7 +254,7 @@ export default function MarsAIPortal() {
 
       const phoneCoords = getPositionCoords(phone);
       const headingCoords = getPositionCoords(heading);
-      const buttonCoords = getPositionCoords(button);
+      const buttonCoords = getPositionCoords(ctaBtn);
       const mascotWidth = mascot.offsetWidth;
       const mascotHeight = mascot.offsetHeight;
 
@@ -564,7 +565,7 @@ export default function MarsAIPortal() {
             {/* Glowing CTA Button */}
             <div className="pt-2">
               <button
-                ref={buttonRef}
+                id="mars-cta-button"
                 onClick={handleRedirect}
                 className="w-full md:w-auto px-8 py-4 rounded-2xl bg-white text-black hover:bg-white/90 text-sm font-semibold transition-all duration-300 shadow-xl shadow-white/5 flex items-center justify-center gap-2 group cursor-pointer"
               >
