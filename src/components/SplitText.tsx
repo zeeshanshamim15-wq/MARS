@@ -169,6 +169,8 @@ const SplitText = ({
     whiteSpace: 'normal',
     wordWrap: 'break-word',
     willChange: 'transform, opacity',
+    paddingBottom: '0.15em',
+    marginBottom: '-0.15em',
   };
 
   const Tag = (tag || 'p') as keyof JSX.IntrinsicElements;

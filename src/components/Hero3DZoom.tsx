@@ -255,27 +255,8 @@ export default function Hero3DZoom() {
       id="core-zoom-portal"
       className="relative min-h-fit md:min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-transparent z-20 py-10 md:py-20 px-4"
     >
-      {/* Custom styles for emerald metallic text sweep effect matching brand style */}
+      {/* Custom styles matching brand style */}
       <style>{`
-        .emerald-text-sweep {
-          background: linear-gradient(
-            120deg,
-            #10b981 15%,
-            #34d399 30%,
-            #a7f3d0 45%,
-            #ffffff 50%,
-            #a7f3d0 55%,
-            #34d399 70%,
-            #10b981 85%
-          );
-          background-size: 300% 100%;
-          background-clip: text;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: metalSweep 5.5s cubic-bezier(0.25, 1, 0.5, 1) infinite;
-          display: inline-block;
-          filter: drop-shadow(0 0 12px rgba(52, 211, 153, 0.25));
-        }
         .hide-scrollbar::-webkit-scrollbar {
           display: none;
         }
@@ -300,15 +281,15 @@ export default function Hero3DZoom() {
             </p>
             <h2 className="text-3xl font-light tracking-tight text-white leading-tight">
               You focus on <br className="block sm:hidden" />
-              <span className="emerald-text-sweep font-bold">your business.</span>
+              <span className="metallic-text-sweep font-bold">your business.</span>
             </h2>
             <h3 className="text-xl font-light text-white/85 leading-normal">
               We build the <br className="block sm:hidden" />
-              <span className="emerald-text-sweep font-bold">invisible engine.</span>
+              <span className="metallic-text-sweep font-bold">invisible engine.</span>
             </h3>
             <p className="text-[11px] font-mono text-white/40 tracking-wider">
               AI, AUTOMATION & SYSTEMS. <br className="block sm:hidden" />
-              <span className="emerald-text-sweep font-bold">WORKING 24/7.</span>
+              <span className="metallic-text-sweep font-bold">WORKING 24/7.</span>
             </p>
           </div>
         ) : (
@@ -318,19 +299,19 @@ export default function Hero3DZoom() {
               ref={t1Ref} 
               className="absolute text-3xl md:text-5xl font-light tracking-tight text-white/95 leading-snug drop-shadow-md select-none"
             >
-              You focus on <span className="emerald-text-sweep font-bold">your business.</span>
+              You focus on <span className="metallic-text-sweep font-bold">your business.</span>
             </div>
             <div 
               ref={t2Ref} 
               className="absolute text-3xl md:text-5xl font-light tracking-tight text-white/95 leading-snug drop-shadow-md select-none"
             >
-              We build the <span className="emerald-text-sweep font-bold">invisible engine.</span>
+              We build the <span className="metallic-text-sweep font-bold">invisible engine.</span>
             </div>
             <div 
               ref={t3Ref} 
               className="absolute text-3xl md:text-5xl font-light tracking-tight text-white/95 leading-snug drop-shadow-md select-none"
             >
-              AI, Automation & Systems. <span className="emerald-text-sweep font-bold">Working 24/7.</span>
+              AI, Automation & Systems. <span className="metallic-text-sweep font-bold">Working 24/7.</span>
             </div>
           </div>
         )}
