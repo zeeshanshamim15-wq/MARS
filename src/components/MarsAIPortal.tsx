@@ -255,6 +255,39 @@ export default function MarsAIPortal() {
       const landY = buttonCoords.top - mascotHeight + 5; 
       const peakY = Math.min(walkStartY, hangY) - 160; 
 
+      // Mobile Hover-Drone Fallback (Option 1)
+      if (window.innerWidth < 768) {
+        const hoverX = phoneCoords.right - mascotWidth + 10;
+        const hoverY = phoneCoords.top - mascotHeight / 2;
+        
+        gsap.set(mascot, {
+          opacity: 1,
+          autoAlpha: 1,
+          x: hoverX,
+          y: hoverY,
+          scale: 0.85,
+          rotation: 0,
+          zIndex: 9999,
+          transformOrigin: "center center"
+        });
+        
+        timeline = gsap.timeline({ repeat: -1 });
+        timeline
+          .to(mascot, {
+            y: hoverY - 12,
+            rotation: 3,
+            duration: 2.0,
+            ease: "sine.inOut"
+          })
+          .to(mascot, {
+            y: hoverY,
+            rotation: -3,
+            duration: 2.0,
+            ease: "sine.inOut"
+          });
+        return;
+      }
+
       // Reset
       gsap.set(mascot, { opacity: 1, autoAlpha: 1, x: startX, y: startY, scale: 1, rotation: 0, zIndex: 0 });
       gsap.set(mascotImg, { y: 0 });
