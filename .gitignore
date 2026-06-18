@@ -27,3 +27,6 @@ dist-ssr
 .chrome-cdp-profile
 .chrome-screenshot-profile*
 
+.env
+.env.*
+
