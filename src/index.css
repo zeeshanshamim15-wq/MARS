@@ -570,5 +570,22 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="password
   cursor: text !important;
 }
 
+/* Dynamic Option styling fallback for browser light/dark modes */
+@media (prefers-color-scheme: light) {
+  select option {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  select option {
+    background-color: #09090b !important;
+    background: #09090b !important;
+    color: #ffffff !important;
+  }
+}
+
 
 
