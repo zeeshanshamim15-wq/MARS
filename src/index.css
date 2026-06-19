@@ -354,13 +354,9 @@
   .metallic-text-sweep {
     background: linear-gradient(
       120deg,
-      #2b2b2b 20%,
-      #5c5c5c 35%,
-      #c9d3e0 45%,
-      #ffffff 50%,
-      #c9d3e0 55%,
-      #5c5c5c 65%,
-      #2b2b2b 80%
+      #ffffff 30%,
+      #71717a 50%,
+      #ffffff 70%
     );
     background-size: 300% 100%;
     background-clip: text;
